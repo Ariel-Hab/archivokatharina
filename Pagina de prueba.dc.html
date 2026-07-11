@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #ede3de; }
+  a { color: #2d423b; }
+  a:hover { color: #ba7878; }
+</style>
+</helmet>
+
+<!-- ===== Nav ===== -->
+<div style="position: sticky; top: 0; z-index: 60; background: rgba(237,227,222,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(45,66,59,0.18);">
+  <div style="max-width: 1440px; margin: 0 auto; padding: 14px clamp(20px, 4vw, 56px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+    <a href="#intro" style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; color: #2d423b; text-decoration: none;">Katharina Armbruster</a>
+    <div style="margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 2.5vw, 32px); flex-wrap: wrap;">
+      <a href="#obra" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;"><span style="font-size: 13px; color: #5c7167;">01</span> Obra</a>
+      <a href="#mural" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;"><span style="font-size: 13px; color: #5c7167;">02</span> Mural</a>
+      <a href="#branding" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;"><span style="font-size: 13px; color: #5c7167;">03</span> Branding</a>
+      <a href="#contacto" style="font-family: 'EB Garamond', serif; font-size: 16px; color: #ede3de; background: #2d423b; padding: 8px 18px; text-decoration: none;">Contacto <span style="color: #ba7878;">→</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Intro ===== -->
+<div id="intro" data-screen-label="Intro" style="display: flex; flex-wrap: wrap; min-height: 88vh; max-width: 1600px; margin: 0 auto; position: relative;">
+  <div id="intro-text" style="position: relative; z-index: 1; flex: 1 1 580px; min-width: 0; padding: clamp(36px, 6vh, 80px) clamp(20px, 5vw, 80px) clamp(36px, 6vh, 64px); display: flex; flex-direction: column; gap: clamp(22px, 3.6vh, 36px); color: #2d423b; justify-content: center;">
+    <div style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: #5c7167;">Portfolio — Artista visual</div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <h1 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(38px, 4.4vw, 58px); line-height: 1.05; margin: 0;">Katharina Armbruster</h1>
+      <div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; border: 1px solid #2d423b; border-radius: 999px; padding: 7px 16px;">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #ba7878; flex: none;"></span>
+        <span style="font-family: 'EB Garamond', serif; font-size: clamp(11.5px, 1.1vw, 13.5px); letter-spacing: 0.13em; text-transform: uppercase;">Universidad Nacional de las Artes — Lic. en Artes Visuales</span>
+      </div>
+    </div>
+    <div style="display: flex; gap: clamp(20px, 3vw, 36px); align-items: stretch; flex-wrap: wrap;">
+      <div style="flex: 0 0 auto; width: clamp(190px, 25vw, 280px); overflow: hidden;">
+        <img src="assets/kati.png" alt="Katharina Armbruster" style="width: 100%; height: 100%; object-fit: cover; object-position: 82% 55%; display: block; filter: saturate(0.92);">
+      </div>
+      <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 22px;">
+        <p style="font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.55; margin: 0; max-width: 54ch;">Artista visual de Zona Sur, Buenos Aires. Finalizando la Licenciatura en Artes Visuales con orientación en pintura (UNA), con formación en dibujo, pintura, cerámica, escultura, grabado y arte impreso. Expuso su obra textil <em>Mujeres</em> en Espacio Barbuda (CABA, 2026) y participó de la Clínica de Obra facilitada por Marina De Caro. Actualmente trabaja freelance en murales, ilustración y venta personalizada.</p>
+        <blockquote style="margin: 0; padding: 0 0 0 22px; border-left: 2px solid #7a948b;">
+          <p style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(19px, 1.9vw, 24px); line-height: 1.4; margin: 0; max-width: 44ch;">«Superficies de superposición y velamiento donde la imagen aparece en un estado inestable, entre la presencia y la ausencia.»</p>
+        </blockquote>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="#contacto" style="display: inline-flex; align-items: center; gap: 10px; background: #2d423b; color: #ede3de; text-decoration: none; font-family: 'EB Garamond', serif; font-size: 17px; letter-spacing: 0.04em; padding: 13px 26px;">Contacto y encargos <span style="color: #ba7878;">→</span></a>
+      <a href="#" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: underline; text-underline-offset: 4px;">Descargar CV (PDF)</a>
+    </div>
+    <div style="border-top: 1px solid rgba(45,66,59,0.3); padding-top: 18px; display: flex; gap: clamp(24px, 4vw, 48px); flex-wrap: wrap;">
+      <a href="#obra" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">01</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;">Obra</span></a>
+      <a href="#mural" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">02</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;">Mural</span></a>
+      <a href="#branding" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">03</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;">Branding</span></a>
+    </div>
+  </div>
+  <div id="intro-art" style="flex: 1 1 340px; min-height: 420px; position: relative; opacity: 1; overflow: hidden;">
+    <img src="assets/nenufares.png" alt="Nenúfares — obra de Katharina Armbruster" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%;">
+  </div>
+</div>
+
+<!-- ===== 01 Obra ===== -->
+<div id="obra" data-screen-label="Obra" style="max-width: 1440px; margin: 0 auto; padding: clamp(60px, 10vh, 110px) clamp(20px, 5vw, 96px) clamp(50px, 8vh, 90px); color: #2d423b; display: flex; flex-direction: column; gap: clamp(40px, 6vh, 64px);">
+  <div style="display: flex; align-items: baseline; gap: 18px; border-bottom: 1px solid rgba(122,148,139,0.5); padding-bottom: 24px; flex-wrap: wrap;">
+    <span style="font-family: 'EB Garamond', serif; font-size: 20px; color: #7a948b;">01</span>
+    <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0;">Obra</h2>
+    <span style="font-family: 'EB Garamond', serif; font-size: clamp(13px, 1.2vw, 16px); letter-spacing: 0.16em; text-transform: uppercase; color: #5c7167; margin-left: auto;">Obra de taller — pintura, grabado, textil, instalación</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: clamp(20px, 4vw, 56px) 1fr;">
+    <div style="border-left: 2px solid #7a948b;"></div>
+    <p id="statement-lines" style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(20px, 2.1vw, 27px); line-height: 1.5; margin: 0; max-width: 62ch;"><span>La práctica se articula en torno a la exploración de la intimidad, la memoria y la ambigüedad como territorios sensibles de percepción. </span><span>A través de capas, transparencias y materialidades diversas, el trabajo construye superficies de superposición y velamiento donde la imagen aparece en un estado inestable, entre la presencia y la ausencia. </span><span>Mi obra propone una aproximación atmosférica y afectiva, en la que los rastros, las huellas y las tensiones entre lo visible y lo oculto activan lecturas abiertas y fragmentarias de la experiencia.</span></p>
+  </div>
+
+  <div data-fade style="display: flex; gap: clamp(24px, 3.5vw, 48px); align-items: flex-end; flex-wrap: wrap;">
+    <img data-lightbox data-drift="-26" src="assets/obra-retratos.png" alt="Retratos — acrílico con veladuras" style="flex: 1 1 480px; min-width: 0; max-width: 860px; display: block; cursor: zoom-in;">
+    <div style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px;" data-drift="22">
+      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 24px; margin: 0;">Retratos</h3>
+      <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;">Pintura a modo de estudio, realizada con veladuras en acrílico. Representa personajes abstraídos de un espacio físico reconocible y atemporal, donde las miradas son protagonistas y construyen la narrativa.</p>
+      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;">Acrílico con veladuras · 50×70 cm · 2025</div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: clamp(28px, 5vw, 72px); align-items: flex-start; flex-wrap: wrap;">
+    <div data-fade style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 14px; margin-top: clamp(0px, 5vh, 72px);">
+      <img data-lightbox data-drift="-30" src="assets/obra-copa.png" alt="Copa de vino tinta — aguatinta" style="width: 100%; display: block; cursor: zoom-in;">
+      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;">Copa de vino tinta</h3>
+      <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;">Aguatinta realizada a modo de estudio, que destaca la individualidad y la soledad en el acto compartido de la celebración, los encuentros y el brindis.</p>
+      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;">Aguatinta (grabado) · 12×15 cm · 2023</div>
+    </div>
+    <div data-fade style="flex: 1.3 1 380px; display: flex; flex-direction: column; gap: 14px;">
+      <img data-lightbox data-drift="20" src="assets/obra-silla.png" alt="Silla y tela — carbonilla en negativo" style="width: 100%; display: block; cursor: zoom-in;">
+      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;">Silla y tela</h3>
+      <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;">Estudio de carbonilla en negativo, realizado con goma de caucho sobre papel escenográfico. Tratando una vez más sobre el vacío y la ausencia.</p>
+      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;">Carbonilla en negativo · 100×75 cm · 2022</div>
+    </div>
+  </div>
+
+  <div data-fade style="display: flex; gap: 24px; align-items: center; padding: 0 clamp(0px, 4vw, 56px); flex-wrap: wrap;">
+    <img data-drift="-18" src="assets/clima-cuaderno.png" alt="Cuaderno de estudios en el taller" style="flex: 1 1 300px; min-width: 0; max-width: 560px; display: block;">
+    <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 18px; padding: 0 clamp(0px, 2vw, 24px);">
+      <img data-drift="24" src="assets/clima-patio.png" alt="Obra colgada con broches en el patio" style="width: 78%; display: block; align-self: flex-end;">
+      <div style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; color: #5c7167; align-self: flex-end;">Cuaderno y patio — el taller</div>
+    </div>
+  </div>
+
+  <div data-fade style="display: flex; gap: clamp(24px, 3.5vw, 48px); align-items: flex-end; padding: 0 clamp(0px, 3vw, 48px); flex-wrap: wrap-reverse;">
+    <div style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px;" data-drift="18">
+      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 24px; margin: 0;">Mujeres</h3>
+      <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;">Trabajo textil realizado con vellón y mostacillas. Demanda los espacios y roles laborales, como también la relación histórica entre la costura y las mujeres: un tejido roto, caracterizado con lastimaduras sobre piel abierta. Expuesta en Espacio Barbuda, CABA (2026).</p>
+      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;">Textil — vellón y mostacillas · 60×60 cm · 2023</div>
+    </div>
+    <img data-lightbox data-drift="-24" src="assets/obra-mujeres.png" alt="Mujeres — obra textil" style="flex: 1 1 380px; min-width: 0; max-width: 640px; display: block; cursor: zoom-in;">
+  </div>
+</div>
+
+<!-- ===== Transición: lunares que invaden ===== -->
+<div id="dots-zone" style="height: 220vh; position: relative;">
+  <div id="dots-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden;">
+    <span class="dot" style="position: absolute; left: 10%; top: 68%; width: 16px; height: 16px; border-radius: 50%; background: #8FD0C2;"></span>
+    <span class="dot" style="position: absolute; left: 22%; top: 30%; width: 12px; height: 12px; border-radius: 50%; background: #F2B8C6;"></span>
+    <span class="dot" style="position: absolute; left: 34%; top: 58%; width: 26px; height: 26px; border-radius: 50%; background: #E3B96E;"></span>
+    <span class="dot" style="position: absolute; left: 47%; top: 24%; width: 22px; height: 22px; border-radius: 50%; background: #8FD0C2;"></span>
+    <span class="dot" style="position: absolute; left: 58%; top: 62%; width: 44px; height: 44px; border-radius: 50%; background: #F2B8C6;"></span>
+    <span class="dot" style="position: absolute; left: 70%; top: 34%; width: 40px; height: 40px; border-radius: 50%; background: #E3B96E;"></span>
+    <span class="dot" style="position: absolute; left: 84%; top: 56%; width: 64px; height: 64px; border-radius: 50%; background: #8FD0C2;"></span>
+    <span class="dot" style="position: absolute; left: 16%; top: 84%; width: 52px; height: 52px; border-radius: 50%; background: #E3B96E;"></span>
+    <div id="dots-wash" style="position: absolute; inset: 0; background: #faf6f3; opacity: 0;"></div>
+  </div>
+</div>
+
+<!-- ===== 03 Mural ===== -->
+<div id="mural" data-screen-label="Mural" style="position: relative; background: #faf6f3; color: #2d423b; overflow: hidden;">
+  <span style="position: absolute; right: -70px; top: 140px; width: 190px; height: 190px; border-radius: 50%; background: #F2B8C6; opacity: 0.55;"></span>
+  <span style="position: absolute; left: -60px; top: 46%; width: 150px; height: 150px; border-radius: 50%; background: #8FD0C2; opacity: 0.5;"></span>
+  <div style="max-width: 1440px; margin: 0 auto; padding: clamp(50px, 8vh, 90px) clamp(20px, 5vw, 96px); display: flex; flex-direction: column; gap: clamp(36px, 5.5vh, 56px); position: relative;">
+    <div style="display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;">
+      <span style="font-family: 'EB Garamond', serif; font-size: 20px; color: #ba7878;">02</span>
+      <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0;">Mural</h2>
+      <span style="width: 16px; height: 16px; border-radius: 50%; background: #8FD0C2; align-self: center;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #E3B96E; align-self: center;"></span>
+      <span style="width: 9px; height: 9px; border-radius: 50%; background: #F2B8C6; align-self: center;"></span>
+    </div>
+  </div>
+  <img data-lightbox data-fade src="assets/mural-lunares.png" alt="Pared completa — Malaku Eventos, lunares turquesa y ocre" style="width: 100%; height: clamp(360px, 78vh, 760px); object-fit: cover; object-position: 50% 62%; display: block; cursor: zoom-in;">
+  <div style="max-width: 1440px; margin: 0 auto; padding: 20px clamp(20px, 5vw, 96px) clamp(50px, 8vh, 90px); display: flex; flex-direction: column; gap: clamp(36px, 5.5vh, 56px); position: relative;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap;">
+      <div style="font-family: 'EB Garamond', serif; font-size: 17px;"><span style="color: #5c7167;">02 Pared completa</span> — Malaku Eventos</div>
+      <p style="font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.5; margin: 0; max-width: 52ch;">Murales pintados a mano que dialogan con el espacio y la estética de cada lugar. Diseño, boceto y pintura in situ, de la pared completa al muro con relieve.</p>
+    </div>
+    <div style="display: flex; gap: 28px; flex-wrap: wrap;">
+      <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
+        <img data-lightbox src="assets/mural-floral.png" alt="Mural floral — pastelería Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block; cursor: zoom-in;">
+        <div style="font-family: 'EB Garamond', serif; font-size: 17px;"><span style="color: #5c7167;">01 Adaptación a espacio</span> — Pastelería Malaku</div>
+      </div>
+      <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
+        <img data-lightbox src="assets/mural-juegos.png" alt="Espacio intervenido — juegos infantiles exteriores Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block; cursor: zoom-in;">
+        <div style="font-family: 'EB Garamond', serif; font-size: 17px;"><span style="color: #5c7167;">03 Espacio intervenido</span> — Juegos exteriores, Malaku Eventos</div>
+      </div>
+    </div>
+    <div data-fade style="display: flex; gap: clamp(32px, 5vw, 72px); border-top: 1px solid rgba(45,66,59,0.25); padding-top: 40px; flex-wrap: wrap;">
+      <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 14px;">
+        <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; letter-spacing: 0.12em; text-transform: uppercase; margin: 0;">Modalidades</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'EB Garamond', serif; font-size: 17px; line-height: 1.4;">
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #8FD0C2; flex: none;"></span><span><strong style="font-weight: 600;">Adaptación a espacio</strong> — el diseño dialoga con las irregularidades y la estética del lugar.</span></div>
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #E3B96E; flex: none;"></span><span><strong style="font-weight: 600;">Pared completa</strong> — uso total del muro sin sobrecargar el espacio.</span></div>
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #F2B8C6; flex: none;"></span><span><strong style="font-weight: 600;">Espacio intervenido</strong> — muros con relieve, forma o textura particular.</span></div>
+        </div>
+      </div>
+      <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 14px;">
+        <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; letter-spacing: 0.12em; text-transform: uppercase; margin: 0;">Proceso</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'EB Garamond', serif; font-size: 17px; line-height: 1.4;">
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="color: #ba7878; font-size: 15px;">1</span><span>Compartime tu idea.</span></div>
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="color: #ba7878; font-size: 15px;">2</span><span>Acordamos cómo sigue.</span></div>
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="color: #ba7878; font-size: 15px;">3</span><span>Bocetos digitales, con dos rondas de cambios.</span></div>
+          <div style="display: flex; gap: 12px; align-items: baseline;"><span style="color: #ba7878; font-size: 15px;">4</span><span>¡A pintar!</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Transición: los lunares se ordenan ===== -->
+<div id="order-zone" style="height: 200vh; position: relative;">
+  <div id="order-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; background: #faf6f3;">
+    <div id="order-wash" style="position: absolute; inset: 0; background: #1a201c; opacity: 0; z-index: 1;"></div>
+    <span class="odot" data-sx="12" data-sy="70" data-ex="30" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 22px; height: 22px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="24" data-sy="26" data-ex="40" data-ey="46" data-c0="242,184,198" data-c1="198,170,150" style="position: absolute; width: 16px; height: 16px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="38" data-sy="60" data-ex="50" data-ey="46" data-c0="227,185,110" data-c1="198,170,150" style="position: absolute; width: 30px; height: 30px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="52" data-sy="22" data-ex="60" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 18px; height: 18px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="66" data-sy="66" data-ex="70" data-ey="46" data-c0="242,184,198" data-c1="198,170,150" style="position: absolute; width: 26px; height: 26px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="80" data-sy="30" data-ex="80" data-ey="46" data-c0="227,185,110" data-c1="198,170,150" style="position: absolute; width: 15px; height: 15px; border-radius: 50%; z-index: 2;"></span>
+    <span class="odot" data-sx="18" data-sy="40" data-ex="20" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 12px; height: 12px; border-radius: 50%; z-index: 2;"></span>
+  </div>
+</div>
+
+<!-- ===== 03 Branding ===== -->
+<div id="branding" data-screen-label="Branding" style="position: relative; background: #1a201c; color: #e9e2da; overflow: hidden;">
+  <div style="max-width: 1440px; margin: 0 auto; padding: clamp(70px, 10vh, 110px) clamp(20px, 5vw, 96px) clamp(48px, 7vh, 72px); display: flex; flex-direction: column; gap: 28px;">
+    <div style="display: flex; align-items: baseline; gap: 20px; border-bottom: 1px solid rgba(198,170,150,0.35); padding-bottom: 26px; flex-wrap: wrap;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; color: #c6aa96;">03</span>
+      <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0; color: #f2ece4;">Branding</h2>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #c6aa96; margin-left: auto;">Diseño de marca — casos</span>
+    </div>
+    <p style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(19px, 2vw, 24px); line-height: 1.5; margin: 0; max-width: 56ch; color: #e9e2da;">Identidades visuales construidas junto a cada marca: del concepto al sistema — wordmark, papelería, dirección de arte y aplicaciones. <span style="font-style: normal; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8f8a80;">[placeholder — texto final con Kati]</span></p>
+  </div>
+
+  <!-- Ventana Norda -->
+  <div data-window="norda" data-fade style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px);">
+    <div id="window-norda" style="border-top: 4px solid #ffffff; box-shadow: 0 40px 90px rgba(0,0,0,0.5); position: relative; z-index: 2;">
+      <div style="background: #f4efe9; color: #191919; display: flex; flex-direction: column;">
+        <div style="background: #12100e; padding: 14px 22px; display: flex; align-items: center; gap: 12px;">
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.9;"></span>
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.55;"></span>
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.3;"></span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #ffffff; margin: 0 auto;">ventana — norda.</span>
+        </div>
+        <div style="padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 52px) clamp(28px, 4vw, 44px);display: flex; flex-direction: column; gap: 32px;">
+          <div style="display: flex; gap: 44px; align-items: flex-start; flex-wrap: wrap;">
+            <img src="assets/norda/wordmark.png" alt="norda. — wordmark" style="width: 160px; flex: none; display: block; mix-blend-mode: multiply; margin-top: 4px;">
+            <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;">Proyecto</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px;">Norda — indumentaria</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;">Alcance</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.55;">Identidad visual, papelería, dirección de arte, aplicaciones (web, vía pública, etiqueta, packaging, redes)</span>
+                </div>
+              </div>
+              <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.5; margin: 0; max-width: 60ch;">Reducir la marca a su gesto mínimo — una grotesca decidida y el blanco y negro — para que la ropa y la fotografía pongan el resto. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span></p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
+            <div style="position: relative; grid-row: span 2; overflow: hidden;">
+              <img src="assets/norda/moda.png" alt="Norda — dirección de arte" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; display: block;">
+              <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;">Dirección de arte</span>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/norda/web.png" alt="Norda — e-commerce" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Web</span>
+            </div>
+            <div style="position: relative; background: #12100e; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 56px; height: 56px; position: relative;">
+                <span style="position: absolute; top: 0; left: 11px; width: 34px; height: 17px; border-radius: 9999px; background: #f4efe9;"></span>
+                <span style="position: absolute; top: 16px; left: 0; width: 27px; height: 27px; background: #f4efe9; clip-path: polygon(0 0, 100% 100%, 0 100%);"></span>
+              </div>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/norda/viapublica.png" alt="Norda — vía pública" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Vía pública</span>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/norda/movil.png" alt="Norda — redes" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Redes</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <a href="#branding" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: #6e5c49; text-decoration: none; border-bottom: 1px solid #6e5c49; padding-bottom: 2px;">ver más de norda. →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divisor -->
+  <div style="max-width: 1100px; margin: 0 auto; padding: 34px clamp(20px, 5vw, 48px); display: flex; align-items: center; gap: 14px; position: relative; z-index: 1;">
+    <span style="width: 22px; height: 1px; background: #c6aa96; opacity: 0.5;"></span>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8f8a80;">Más marcas →</span>
+  </div>
+
+  <!-- Ventana Vera -->
+  <div data-window="vera" data-fade style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px);">
+    <div id="window-vera" style="border-top: 4px solid; border-image: linear-gradient(90deg, #0E1A14, #33412E, #A4B465, #DCCCB3, #F7F4ED) 1; box-shadow: 0 40px 90px rgba(20,32,20,0.5); position: relative; z-index: 3;">
+      <div style="background: #f4efe9; color: #191919; display: flex; flex-direction: column;">
+        <div style="background: #12100e; padding: 14px 22px; display: flex; align-items: center; gap: 12px;">
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #33412E;"></span>
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #A4B465;"></span>
+          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #DCCCB3;"></span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #DCCCB3; margin: 0 auto;">ventana — vera botanicals.</span>
+        </div>
+        <div style="padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 52px) clamp(28px, 4vw, 44px); display: flex; flex-direction: column; gap: 32px;">
+          <div style="display: flex; gap: 44px; align-items: flex-start; flex-wrap: wrap;">
+            <img src="assets/vera/logo.png" alt="vēra botanicals — wordmark" style="width: 160px; flex: none; display: block; mix-blend-mode: multiply; margin-top: 8px;">
+            <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;">Proyecto</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px;">Vera Botanicals — cosmética natural</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;">Alcance</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.55;">Identidad visual (wordmark + submarca), paleta y patrones, packaging, dirección de foto, aplicaciones (redes, etiqueta)</span>
+                </div>
+              </div>
+              <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.5; margin: 0; max-width: 60ch;">Una identidad orgánica y serena, apoyada en verdes profundos y texturas naturales, que traduce la formulación consciente de la marca en cada superficie. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span></p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
+            <div style="position: relative; grid-row: span 2; overflow: hidden;">
+              <img src="assets/vera/overview.png" alt="Vera Botanicals — producto" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block;">
+              <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;">Producto</span>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/vera/bottle.png" alt="Vera Botanicals — hero" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Hero</span>
+            </div>
+            <div style="position: relative; display: grid; grid-template-columns: repeat(5, 1fr);">
+              <span style="background: #0E1A14;"></span>
+              <span style="background: #33412E;"></span>
+              <span style="background: #A4B465;"></span>
+              <span style="background: #DCCCB3;"></span>
+              <span style="background: #F7F4ED; border-left: 1px solid rgba(0,0,0,0.08);"></span>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/vera/patterns.png" alt="Vera Botanicals — patrones" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Patrones</span>
+            </div>
+            <div style="position: relative; overflow: hidden;">
+              <img src="assets/vera/packaging.png" alt="Vera Botanicals — packaging" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
+              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;">Packaging</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <a href="#branding" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: #6e5c49; text-decoration: none; border-bottom: 1px solid #6e5c49; padding-bottom: 2px;">ver más de vera botanicals. →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA de la arista -->
+  <div style="max-width: 1100px; margin: 0 auto; padding: clamp(40px, 6vh, 64px) clamp(20px, 5vw, 48px) clamp(70px, 9vh, 100px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap; position: relative; z-index: 1;">
+    <p style="font-family: 'EB Garamond', serif; font-size: 19px; margin: 0; color: #bdb4a8;">¿Tu marca necesita una identidad?</p>
+    <a href="#contacto" style="display: inline-flex; align-items: center; gap: 10px; border: 1px solid #c6aa96; color: #c6aa96; text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.08em; padding: 11px 22px; margin-left: auto;">CONTACTO Y ENCARGOS →</a>
+  </div>
+</div>
+
+<!-- ===== Contacto ===== -->
+<div id="contacto" data-screen-label="Contacto" style="background: #2d423b; color: #ede3de;">
+  <div style="max-width: 1440px; margin: 0 auto; padding: clamp(60px, 12vh, 120px) clamp(20px, 5vw, 96px) clamp(40px, 6vh, 64px); display: flex; flex-direction: column; gap: clamp(32px, 5vh, 48px);">
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <div style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: #a9beb6;">Contacto y encargos</div>
+      <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 4vw, 54px); margin: 0; max-width: 22ch; line-height: 1.15;">Obra disponible, murales e ilustración por encargo.</h2>
+    </div>
+    <div style="display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #a9beb6;">Email</span>
+        <a href="mailto:katharinarmbruster@gmail.com" style="font-family: 'EB Garamond', serif; font-size: clamp(19px, 2vw, 24px); color: #ede3de; text-decoration: underline; text-underline-offset: 5px;">katharinarmbruster@gmail.com</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #a9beb6;">WhatsApp</span>
+        <a href="tel:+5491150417844" style="font-family: 'EB Garamond', serif; font-size: clamp(19px, 2vw, 24px); color: #ede3de; text-decoration: none;">+54 9 11 5041-7844</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #a9beb6;">Instagram</span>
+        <a href="https://instagram.com/archivo.katharina" style="font-family: 'EB Garamond', serif; font-size: clamp(19px, 2vw, 24px); color: #ede3de; text-decoration: none;">@archivo.katharina</a>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(237,227,222,0.25); padding-top: 22px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+      <span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #a9beb6;">Katharina Armbruster — Zona Sur, Buenos Aires, Argentina</span>
+      <span style="display: flex; gap: 8px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #8FD0C2;"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: #E3B96E;"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: #F2B8C6;"></span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Lightbox: obras ===== -->
+<div id="lightbox" style="position: fixed; inset: 0; z-index: 100; background: rgba(20,24,21,0.94); display: none; align-items: center; justify-content: center; padding: clamp(24px, 6vh, 64px) clamp(20px, 6vw, 80px); cursor: zoom-out;">
+  <img id="lightbox-img" src="" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 90px rgba(0,0,0,0.55); display: block;">
+  <span id="lightbox-close" style="position: absolute; top: clamp(16px, 3vh, 32px); right: clamp(16px, 3vw, 40px); font-family: 'EB Garamond', serif; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: #e9e2da; border: 1px solid rgba(233,226,218,0.5); padding: 8px 16px; cursor: pointer;">Cerrar ✕</span>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+    const art = document.getElementById('intro-art');
+    const introText = document.getElementById('intro-text');
+    const zone = document.getElementById('dots-zone');
+    const sticky = document.getElementById('dots-sticky');
+    const wash = document.getElementById('dots-wash');
+    const dots = sticky ? Array.from(sticky.querySelectorAll('.dot')) : [];
+    const factors = [8, 7, 12, 10, 22, 20, 34, 26];
+    const artImg = art ? art.querySelector('img') : null;
+    const drifts = Array.from(document.querySelectorAll('[data-drift]')).map((el) => [el, parseFloat(el.getAttribute('data-drift')) || 0]);
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      if (art) {
+        const r = art.getBoundingClientRect();
+        const gone = clamp01(1 - (r.bottom) / (vh * 0.9));
+        art.style.opacity = String(1 - gone);
+        art.style.filter = gone > 0.01 ? 'blur(' + (gone * 6).toFixed(1) + 'px)' : 'none';
+        if (artImg) artImg.style.transform = 'scale(' + (1 + gone * 0.06).toFixed(3) + ')';
+        if (introText) {
+          introText.style.opacity = String(1 - gone);
+          introText.style.filter = gone > 0.01 ? 'blur(' + (gone * 4).toFixed(1) + 'px)' : 'none';
+        }
+      }
+      drifts.forEach(([el, f]) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > vh + 100) return;
+        const prog = (r.top + r.height / 2 - vh / 2) / vh;
+        el.style.transform = 'translateY(' + (prog * f).toFixed(1) + 'px)';
+      });
+      if (zone) {
+        const zr = zone.getBoundingClientRect();
+        const total = zone.offsetHeight - vh;
+        const p = clamp01(-zr.top / total);
+        const eased = Math.pow(p, 1.5);
+        dots.forEach((d, i) => {
+          d.style.transform = 'scale(' + (1 + eased * factors[i % factors.length]) + ')';
+        });
+        if (wash) wash.style.opacity = String(p > 0.82 ? (p - 0.82) / 0.18 : 0);
+      }
+    };
+    this._onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll);
+    update();
+
+    const fades = Array.from(document.querySelectorAll('[data-fade]'));
+    fades.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top > window.innerHeight * 0.9) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(16px)';
+      }
+      el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+    });
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    fades.forEach((el) => this._io.observe(el));
+
+    // ---- Transición mural→branding: los lunares se ordenan ----
+    const orderZone = document.getElementById('order-zone');
+    const orderWash = document.getElementById('order-wash');
+    const odots = orderZone ? Array.from(orderZone.querySelectorAll('.odot')) : [];
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const lerpColor = (c0, c1, t) => {
+      const a = c0.split(',').map(Number), b = c1.split(',').map(Number);
+      return 'rgb(' + a.map((v, i) => Math.round(lerp(v, b[i], t))).join(',') + ')';
+    };
+    const updateOrder = () => {
+      if (!orderZone) return;
+      const zr = orderZone.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = orderZone.offsetHeight - vh;
+      const p = clamp01(-zr.top / total);
+      const eased = p * p * (3 - 2 * p);
+      odots.forEach((d) => {
+        const sx = parseFloat(d.dataset.sx), sy = parseFloat(d.dataset.sy);
+        const ex = parseFloat(d.dataset.ex), ey = parseFloat(d.dataset.ey);
+        d.style.left = lerp(sx, ex, eased) + '%';
+        d.style.top = lerp(sy, ey, eased) + '%';
+        d.style.backgroundColor = lerpColor(d.dataset.c0, d.dataset.c1, eased);
+      });
+      if (orderWash) orderWash.style.opacity = String(p > 0.75 ? (p - 0.75) / 0.25 : 0);
+    };
+
+    // ---- Ventanas Branding: encendido + traspaso con profundidad ----
+    const winNorda = document.getElementById('window-norda');
+    const winVera = document.getElementById('window-vera');
+    const updateWindows = () => {
+      if (!winVera) return;
+      const vr = winVera.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = clamp01((vh - vr.top) / (vh * 0.85));
+      winVera.style.transform = 'translateY(' + (-(p * 26)).toFixed(1) + 'px) scale(' + (0.95 + 0.05 * p).toFixed(3) + ')';
+      winVera.style.opacity = String(0.55 + 0.45 * p);
+      if (winNorda) {
+        winNorda.style.transform = 'scale(' + (1 - 0.05 * p).toFixed(3) + ')';
+        winNorda.style.filter = p > 0.02 ? 'blur(' + (p * 3.5).toFixed(1) + 'px)' : 'none';
+        winNorda.style.opacity = String(1 - 0.4 * p);
+      }
+    };
+    [winNorda, winVera].forEach((w) => { if (w) w.style.transition = 'transform 0.05s linear, filter 0.05s linear'; });
+
+    document.querySelectorAll('[data-window]').forEach((win) => {
+      const dots = Array.from(win.querySelectorAll('.chrome-dot'));
+      const originals = dots.map((d) => ({ opacity: d.style.opacity || '1' }));
+      dots.forEach((d) => { d.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; d.style.opacity = '0'; d.style.transform = 'scale(0.3)'; });
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            dots.forEach((d, i) => {
+              setTimeout(() => { d.style.opacity = originals[i].opacity; d.style.transform = 'scale(1)'; }, i * 160);
+            });
+            io.unobserve(win);
+          }
+        });
+      }, { threshold: 0.25 });
+      io.observe(win);
+    });
+
+    const prevOnScroll = this._onScroll;
+    this._onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateOrder(); updateWindows(); ticking = false; }); }
+    };
+    window.removeEventListener('scroll', prevOnScroll);
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    updateOrder();
+    updateWindows();
+
+    const stmt = document.getElementById('statement-lines');
+    const lines = stmt ? Array.from(stmt.children) : [];
+    lines.forEach((s, i) => {
+      s.style.opacity = '0';
+      s.style.transition = 'opacity 1.3s ease ' + (i * 0.4) + 's';
+    });
+    if (stmt) {
+      this._lio = new IntersectionObserver((es) => {
+        es.forEach((e) => {
+          if (e.isIntersecting) {
+            lines.forEach((s) => { s.style.opacity = '1'; });
+            this._lio.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      this._lio.observe(stmt);
+    }
+
+    // ---- Lightbox: tocar una obra la agranda ----
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const openLightbox = (img) => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+    const closeLightbox = () => {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+    document.querySelectorAll('img[data-lightbox]').forEach((img) => {
+      img.addEventListener('click', () => openLightbox(img));
+    });
+    lightbox.addEventListener('click', closeLightbox);
+    lightboxClose.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+    lightboxImg.addEventListener('click', (e) => e.stopPropagation());
+    this._onKeydown = (e) => { if (e.key === 'Escape') closeLightbox(); };
+    document.addEventListener('keydown', this._onKeydown);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+    if (this._io) this._io.disconnect();
+    if (this._onKeydown) document.removeEventListener('keydown', this._onKeydown);
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
