@@ -16,6 +16,30 @@
   body { margin: 0; background: #ede3de; }
   a { color: #2d423b; }
   a:hover { color: #ba7878; }
+
+  /* ---- Imágenes interactivas: el hover avisa que son clickeables ---- */
+  /* Se usan las propiedades CSS individuales scale/translate (no el shorthand
+     transform) a propósito: así el hover (scale, suave) no pisa el parallax del
+     scroll (translate, instantáneo). Son propiedades distintas y se animan aparte. */
+  [data-zoom] { cursor: zoom-in; transition: scale 0.35s cubic-bezier(0.2,0.7,0.3,1), box-shadow 0.35s ease, filter 0.35s ease; }
+  [data-zoom]:hover, [data-zoom]:focus-visible { scale: 1.035; box-shadow: 0 22px 55px rgba(20,24,21,0.28); filter: saturate(1.04) brightness(1.02); }
+
+  /* Imágenes enmarcadas (mural + piezas de branding): el zoom pasa DENTRO del marco recortado */
+  .zoom-marco { overflow: hidden; cursor: zoom-in; position: relative; transition: box-shadow 0.35s ease; }
+  .zoom-marco .zoom-img { transition: scale 0.45s cubic-bezier(0.2,0.7,0.3,1); }
+  .zoom-marco:hover .zoom-img, .zoom-marco:focus-within .zoom-img { scale: 1.06; }
+  .zoom-marco:hover, .zoom-marco:focus-within { box-shadow: 0 20px 48px rgba(20,24,21,0.30); }
+
+  /* Foco por teclado visible, acorde a la paleta (sin outline default) */
+  [data-zoom]:focus-visible, .zoom-marco:focus-visible { outline: 2px solid #7a948b; outline-offset: 3px; }
+  [data-zoom]:focus:not(:focus-visible), .zoom-marco:focus:not(:focus-visible) { outline: none; }
+
+  /* ---- Visor (lightbox): apertura y cierre suaves ---- */
+  #lightbox { opacity: 0; transition: opacity 0.3s ease; }
+  #lightbox.abierto { opacity: 1; }
+  #lightbox-img { scale: 0.96; transition: scale 0.3s cubic-bezier(0.2,0.7,0.3,1); }
+  #lightbox.abierto #lightbox-img { scale: 1; }
+  #lightbox-cap { position: absolute; left: 0; right: 0; bottom: clamp(16px, 3vh, 32px); margin: 0 auto; max-width: 70ch; padding: 0 24px; text-align: center; font-family: 'EB Garamond', serif; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.4; color: #e9e2da; text-shadow: 0 1px 3px rgba(0,0,0,0.6); pointer-events: none; }
 </style>
 </helmet>
 
@@ -87,7 +111,7 @@
   </div>
 
   <div data-fade style="display: flex; gap: clamp(24px, 3.5vw, 48px); align-items: flex-end; flex-wrap: wrap;">
-    <img data-lightbox data-drift="-26" src="assets/obra-retratos.png" alt="Retratos — acrílico con veladuras" style="flex: 1 1 480px; min-width: 0; max-width: 860px; display: block; cursor: zoom-in;">
+    <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-26" src="assets/obra-retratos.png" alt="Retratos — acrílico con veladuras" style="flex: 1 1 480px; min-width: 0; max-width: 860px; display: block; cursor: zoom-in;">
     <div style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px;" data-drift="22">
       <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 24px; margin: 0;" data-i18n="retratos-title">Retratos</h3>
       <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;" data-i18n="retratos-desc">Pintura a modo de estudio, realizada con veladuras en acrílico. Representa personajes abstraídos de un espacio físico reconocible y atemporal, donde las miradas son protagonistas y construyen la narrativa.</p>
@@ -97,13 +121,13 @@
 
   <div style="display: flex; gap: clamp(28px, 5vw, 72px); align-items: flex-start; flex-wrap: wrap;">
     <div data-fade style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 14px; margin-top: clamp(0px, 5vh, 72px);">
-      <img data-lightbox data-drift="-30" src="assets/obra-copa.png" alt="Copa de vino tinta — aguatinta" style="width: 100%; display: block; cursor: zoom-in;">
+      <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-30" src="assets/obra-copa.png" alt="Copa de vino tinta — aguatinta" style="width: 100%; display: block; cursor: zoom-in;">
       <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;" data-i18n="copa-title">Copa de vino tinta</h3>
       <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;" data-i18n="copa-desc">Aguatinta realizada a modo de estudio, que destaca la individualidad y la soledad en el acto compartido de la celebración, los encuentros y el brindis.</p>
       <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="copa-meta">Aguatinta (grabado) · 12×15 cm · 2023</div>
     </div>
     <div data-fade style="flex: 1.3 1 380px; display: flex; flex-direction: column; gap: 14px;">
-      <img data-lightbox data-drift="20" src="assets/obra-silla.png" alt="Silla y tela — carbonilla en negativo" style="width: 100%; display: block; cursor: zoom-in;">
+      <img data-lightbox data-zoom tabindex="0" role="button" data-drift="20" src="assets/obra-silla.png" alt="Silla y tela — carbonilla en negativo" style="width: 100%; display: block; cursor: zoom-in;">
       <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;" data-i18n="silla-title">Silla y tela</h3>
       <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;" data-i18n="silla-desc">Estudio de carbonilla en negativo, realizado con goma de caucho sobre papel escenográfico. Tratando una vez más sobre el vacío y la ausencia.</p>
       <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="silla-meta">Carbonilla en negativo · 100×75 cm · 2022</div>
@@ -124,7 +148,7 @@
       <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;" data-i18n="mujeres-desc">Trabajo textil realizado con vellón y mostacillas. Demanda los espacios y roles laborales, como también la relación histórica entre la costura y las mujeres: un tejido roto, caracterizado con lastimaduras sobre piel abierta. Expuesta en Espacio Barbuda, CABA (2026).</p>
       <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="mujeres-meta">Textil — vellón y mostacillas · 60×60 cm · 2023</div>
     </div>
-    <img data-lightbox data-drift="-24" src="assets/obra-mujeres.png" alt="Mujeres — obra textil" style="flex: 1 1 380px; min-width: 0; max-width: 640px; display: block; cursor: zoom-in;">
+    <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-24" src="assets/obra-mujeres.png" alt="Mujeres — obra textil" style="flex: 1 1 380px; min-width: 0; max-width: 640px; display: block; cursor: zoom-in;">
   </div>
 </div>
 
@@ -156,7 +180,7 @@
       <span style="width: 9px; height: 9px; border-radius: 50%; background: #F2B8C6; align-self: center;"></span>
     </div>
   </div>
-  <img data-lightbox data-fade src="assets/mural-lunares.png" alt="Pared completa — Malaku Eventos, lunares turquesa y ocre" style="width: 100%; height: clamp(360px, 78vh, 760px); object-fit: cover; object-position: 50% 62%; display: block; cursor: zoom-in;">
+  <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox data-fade src="assets/mural-lunares.png" alt="Pared completa — Malaku Eventos, lunares turquesa y ocre" style="width: 100%; height: clamp(360px, 78vh, 760px); object-fit: cover; object-position: 50% 62%; display: block;"></span>
   <div style="max-width: 1440px; margin: 0 auto; padding: 20px clamp(20px, 5vw, 96px) clamp(50px, 8vh, 90px); display: flex; flex-direction: column; gap: clamp(36px, 5.5vh, 56px); position: relative;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap;">
       <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-full"><span style="color: #5c7167;">02 Pared completa</span> — Malaku Eventos</div>
@@ -164,11 +188,11 @@
     </div>
     <div style="display: flex; gap: 28px; flex-wrap: wrap;">
       <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
-        <img data-lightbox src="assets/mural-floral.png" alt="Mural floral — pastelería Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block; cursor: zoom-in;">
+        <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox src="assets/mural-floral.png" alt="Mural floral — pastelería Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block;"></span>
         <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-adapt"><span style="color: #5c7167;">01 Adaptación a espacio</span> — Pastelería Malaku</div>
       </div>
       <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
-        <img data-lightbox src="assets/mural-juegos.png" alt="Espacio intervenido — juegos infantiles exteriores Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block; cursor: zoom-in;">
+        <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox src="assets/mural-juegos.png" alt="Espacio intervenido — juegos infantiles exteriores Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block;"></span>
         <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-inter"><span style="color: #5c7167;">03 Espacio intervenido</span> — Juegos exteriores, Malaku Eventos</div>
       </div>
     </div>
@@ -247,12 +271,12 @@
             </div>
           </div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
-            <div style="position: relative; grid-row: span 2; overflow: hidden;">
-              <img src="assets/norda/moda.png" alt="Norda — dirección de arte" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; grid-row: span 2; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/norda/moda.png" alt="Norda — dirección de arte" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; display: block;">
               <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;" data-i18n="norda-lbl-arte">Dirección de arte</span>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/norda/web.png" alt="Norda — e-commerce" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/norda/web.png" alt="Norda — e-commerce" style="width: 100%; height: 100%; object-fit: cover; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-web">Web</span>
             </div>
             <div style="position: relative; background: #12100e; display: flex; align-items: center; justify-content: center;">
@@ -261,12 +285,12 @@
                 <span style="position: absolute; top: 16px; left: 0; width: 27px; height: 27px; background: #f4efe9; clip-path: polygon(0 0, 100% 100%, 0 100%);"></span>
               </div>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/norda/viapublica.png" alt="Norda — vía pública" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/norda/viapublica.png" alt="Norda — vía pública" style="width: 100%; height: 100%; object-fit: cover; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-via">Vía pública</span>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/norda/movil.png" alt="Norda — redes" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/norda/movil.png" alt="Norda — redes" style="width: 100%; height: 100%; object-fit: cover; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-redes">Redes</span>
             </div>
           </div>
@@ -312,12 +336,12 @@
             </div>
           </div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
-            <div style="position: relative; grid-row: span 2; overflow: hidden;">
-              <img src="assets/vera/overview.png" alt="Vera Botanicals — producto" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; grid-row: span 2; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/vera/overview.png" alt="Vera Botanicals — producto" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block;">
               <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;" data-i18n="vera-lbl-producto">Producto</span>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/vera/bottle.png" alt="Vera Botanicals — hero" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/vera/bottle.png" alt="Vera Botanicals — hero" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-hero">Hero</span>
             </div>
             <div style="position: relative; display: grid; grid-template-columns: repeat(5, 1fr);">
@@ -327,12 +351,12 @@
               <span style="background: #DCCCB3;"></span>
               <span style="background: #F7F4ED; border-left: 1px solid rgba(0,0,0,0.08);"></span>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/vera/patterns.png" alt="Vera Botanicals — patrones" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/vera/patterns.png" alt="Vera Botanicals — patrones" style="width: 100%; height: 100%; object-fit: cover; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-patrones">Patrones</span>
             </div>
-            <div style="position: relative; overflow: hidden;">
-              <img src="assets/vera/packaging.png" alt="Vera Botanicals — packaging" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
+            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
+              <img class="zoom-img" data-lightbox src="assets/vera/packaging.png" alt="Vera Botanicals — packaging" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
               <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-packaging">Packaging</span>
             </div>
           </div>
@@ -382,6 +406,7 @@
 <!-- ===== Lightbox: obras ===== -->
 <div id="lightbox" style="position: fixed; inset: 0; z-index: 100; background: rgba(20,24,21,0.94); display: none; align-items: center; justify-content: center; padding: clamp(24px, 6vh, 64px) clamp(20px, 6vw, 80px); cursor: zoom-out;">
   <img id="lightbox-img" src="" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 90px rgba(0,0,0,0.55); display: block;">
+  <div id="lightbox-cap"></div>
   <span id="lightbox-close" style="position: absolute; top: clamp(16px, 3vh, 32px); right: clamp(16px, 3vw, 40px); font-family: 'EB Garamond', serif; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: #e9e2da; border: 1px solid rgba(233,226,218,0.5); padding: 8px 16px; cursor: pointer;" data-i18n="lightbox-close">Cerrar ✕</span>
 </div>
 
@@ -419,7 +444,8 @@ class Component extends DCLogic {
         const r = el.getBoundingClientRect();
         if (r.bottom < -100 || r.top > vh + 100) return;
         const prog = (r.top + r.height / 2 - vh / 2) / vh;
-        el.style.transform = 'translateY(' + (prog * f).toFixed(1) + 'px)';
+        // Propiedad `translate` (no `transform`): deja `scale` libre para el hover de las imágenes.
+        el.style.translate = '0px ' + (prog * f).toFixed(1) + 'px';
       });
       if (zone) {
         const zr = zone.getBoundingClientRect();
@@ -551,15 +577,22 @@ class Component extends DCLogic {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxCap = document.getElementById('lightbox-cap');
     const openLightbox = (img) => {
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt;
+      if (lightboxCap) lightboxCap.textContent = img.dataset.caption || img.alt || '';
+      clearTimeout(this._lbTimer);
       lightbox.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      void lightbox.offsetWidth; // forzar reflow: registra el estado inicial (opacity 0) para que la transición reproduzca
+      lightbox.classList.add('abierto');
     };
     const closeLightbox = () => {
-      lightbox.style.display = 'none';
+      lightbox.classList.remove('abierto');
       document.body.style.overflow = '';
+      clearTimeout(this._lbTimer);
+      this._lbTimer = setTimeout(() => { lightbox.style.display = 'none'; }, 320);
     };
     document.querySelectorAll('img[data-lightbox]').forEach((img) => {
       img.addEventListener('click', () => openLightbox(img));
@@ -567,7 +600,16 @@ class Component extends DCLogic {
     lightbox.addEventListener('click', closeLightbox);
     lightboxClose.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
     lightboxImg.addEventListener('click', (e) => e.stopPropagation());
-    this._onKeydown = (e) => { if (e.key === 'Escape') closeLightbox(); };
+    // Teclado: Escape cierra; Enter/Espacio sobre una imagen o marco enfocado abre el visor.
+    this._onKeydown = (e) => {
+      if (e.key === 'Escape') { closeLightbox(); return; }
+      if (e.key === 'Enter' || e.key === ' ') {
+        const el = document.activeElement;
+        if (!el || !el.matches) return;
+        if (el.matches('img[data-zoom][data-lightbox]')) { e.preventDefault(); openLightbox(el); }
+        else if (el.matches('.zoom-marco')) { const im = el.querySelector('img[data-lightbox]'); if (im) { e.preventDefault(); openLightbox(im); } }
+      }
+    };
     document.addEventListener('keydown', this._onKeydown);
 
     // ---- Cambio de idioma ES / EN ----
