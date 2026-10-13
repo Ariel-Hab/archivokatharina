@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba de luz, reflejo y perspectiva — DESCARTABLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   ARCHIVO DE PRUEBA — SE BORRA DESPUÉS. No forma parte del prototipo.
+   Sirve para una sola cosa: ver con ojos propios cómo se comportan la luz,
+   el reflejo del vidrio y la perspectiva sobre LAS OBRAS REALES de Kati.
+   ========================================================================== */
+
+:root {
+  /* Estos valores los mueven los sliders de arriba. Arrancan ALTOS a propósito:
+     conviene ver el efecto exagerado y bajarlo hasta donde guste, y no al revés. */
+  --luz: 0.22;        /* opacidad del halo de luz sobre la pared */
+  --reflejo: 0.12;    /* opacidad del reflejo del vidrio */
+  --persp: 12;        /* grados máximos de rotación en Y */
+  --penumbra: 0.50;   /* cuánto brillo pierde una obra descentrada */
+  --rebote-on: 1;     /* rebote de color sobre la pared: 1 sí / 0 no */
+  --veta-on: 0;       /* veta de la madera: 1 sí / 0 no */
+  --filete-on: 0;     /* filete oscuro entre passepartout y obra: 1 sí / 0 no */
+  --passe: #e6ddcd;   /* color del passepartout */
+  --pared: #1d1a16;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--pared);
+  color: #d9cfc0;
+  font-family: 'EB Garamond', Georgia, serif;
+  transition: background 0.4s ease;
+}
+
+/* Viñeta de sala: hunde los bordes de la pantalla en penumbra.
+   Va fija sobre todo, sin interceptar clics. */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%,
+              rgba(0,0,0,0) 30%, rgba(0,0,0,0.28) 68%, rgba(0,0,0,0.52) 100%);
+}
+
+/* ---------- Panel de controles ---------- */
+.controles {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(12,10,8,0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(217,207,192,0.18);
+  padding: 14px clamp(16px, 3vw, 36px);
+  display: flex; flex-wrap: wrap; gap: 22px 32px; align-items: center;
+}
+.controles h1 {
+  font-size: 16px; font-weight: 600; margin: 0 auto 0 0;
+  letter-spacing: 0.02em;
+}
+.controles h1 small {
+  display: block; font-size: 11.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #8d7f6d; font-weight: 400; margin-top: 3px;
+}
+.ctl { display: flex; flex-direction: column; gap: 5px; min-width: 148px; }
+.ctl label {
+  font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #a2917d; display: flex; justify-content: space-between; gap: 12px;
+}
+.ctl label b { color: #efe6d8; font-weight: 500; font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: #b08d63; }
+.ctl-check { flex-direction: row; align-items: center; gap: 8px; min-width: 0; }
+.ctl-check label { text-transform: none; letter-spacing: 0.06em; font-size: 13px; }
+select {
+  background: #241f19; color: #efe6d8; border: 1px solid rgba(217,207,192,0.25);
+  padding: 5px 8px; font-family: inherit; font-size: 13px;
+}
+
+/* ---------- Secciones ---------- */
+main { padding: 0 clamp(16px, 3vw, 36px) 90px; }
+
+.bloque { padding-top: 54px; }
+.bloque > h2 {
+  font-size: 24px; font-weight: 500; margin: 0 0 6px;
+  color: #efe6d8;
+}
+.bloque > p {
+  margin: 0 0 34px; max-width: 74ch; font-size: 16px;
+  line-height: 1.5; color: #b1a493;
+}
+.bloque > p em { color: #d9cfc0; }
+
+.fila {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(38px, 5vw, 84px);
+  flex-wrap: wrap;
+  /* La perspectiva vive en la fila, no en cada marco: así todos los cuadros
+     comparten el mismo punto de fuga, como en una sala real. */
+  perspective: 1600px;
+  padding: 30px 0;
+}
+
+/* ---------- Una obra enmarcada ---------- */
+.obra {
+  --d: 0;      /* 0 = la estás mirando de frente · 1 = totalmente descentrada */
+  --s: 1;      /* de qué lado está: -1 izquierda, 1 derecha */
+  --rebote: rgba(180,140,100,0.5);
+  position: relative;
+  margin: 0;
+  display: flex; flex-direction: column; align-items: center;
+  transition: none;
+}
+
+/* CAPA 1 — halo de luz sobre la pared, detrás del marco */
+.obra .halo {
+  position: absolute; left: -22%; right: -22%; top: -26%; bottom: 4%;
+  background: radial-gradient(ellipse at 50% 38%,
+              rgba(247,236,214,1) 0%,
+              rgba(247,236,214,0.45) 32%,
+              rgba(247,236,214,0) 66%);
+  opacity: calc(var(--luz) * (1 - var(--d)));
+  pointer-events: none;
+}
+
+/* CAPA EXTRA — rebote: la pared toma un tinte del color de la obra */
+.obra .rebote {
+  position: absolute; left: -10%; right: -10%; top: -8%; bottom: -8%;
+  background: radial-gradient(ellipse at center, var(--rebote) 0%, transparent 62%);
+  filter: blur(34px);
+  opacity: calc(var(--rebote-on) * 0.32 * (1 - var(--d)));
+  pointer-events: none;
+}
+
+/* CAPAS 2-5 — el marco: madera, volumen, sombra proyectada y de contacto */
+.obra .marco {
+  position: relative; z-index: 1;
+  padding: 16px;
+  background: linear-gradient(160deg, #7a6449 0%, #5b4a36 55%, #4a3c2b 100%);
+  box-shadow:
+    0 20px 38px rgba(0,0,0,0.55),   /* sombra proyectada sobre la pared */
+    0 4px 10px rgba(0,0,0,0.45),    /* sombra de contacto: lo cuelga */
+    inset 0 1px 0 rgba(255,240,214,0.22),   /* bisel: canto iluminado arriba */
+    inset 0 -1px 0 rgba(0,0,0,0.45);        /* bisel: canto en sombra abajo */
+  transform: rotateY(calc(var(--s) * var(--d) * var(--persp) * 1deg));
+  transform-style: preserve-3d;
+  filter: brightness(calc(1 - var(--penumbra) * var(--d)));
+}
+/* veta de la madera (apagada por defecto) */
+.obra .marco::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(92deg,
+              rgba(0,0,0,0.20) 0px, rgba(0,0,0,0) 2px, rgba(255,255,255,0.05) 4px, rgba(0,0,0,0) 7px);
+  opacity: calc(var(--veta-on) * 0.55);
+}
+
+/* CAPA 6 — passepartout */
+.obra .passe { padding: 20px; background: var(--passe); }
+
+/* CAPAS 7-8 — la obra, su sombra hundida y el reflejo del vidrio */
+.obra .lienzo {
+  position: relative; line-height: 0;
+  /* Filete: la línea oscura fina que los enmarcadores ponen entre el
+     passepartout y la obra. Existe justamente para obras cuyo fondo es
+     claro, que si no se funden con el passepartout. */
+  box-shadow: 0 0 0 calc(var(--filete-on) * 2px) #35302a;
+}
+.obra .lienzo img { display: block; width: auto; }
+
+.obra[data-tamano="chico"]  .lienzo img { height: clamp(96px, 13vh, 132px); }
+.obra[data-tamano="normal"] .lienzo img { height: clamp(160px, 22vh, 212px); }
+.obra[data-tamano="grande"] .lienzo img { height: clamp(210px, 29vh, 282px); }
+
+/* la sombra que el passepartout tira sobre la obra: la hunde dentro del marco */
+.obra .sombra-passe {
+  position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 3px 9px rgba(0,0,0,0.35);
+}
+
+/* el reflejo del vidrio: SOLO cuando la obra no es la que mirás */
+.obra .reflejo {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(114deg,
+              rgba(255,255,255,0) 18%,
+              rgba(255,255,255,0.85) 33%,
+              rgba(255,255,255,0.25) 43%,
+              rgba(255,255,255,0) 52%,
+              rgba(255,255,255,0) 72%,
+              rgba(255,255,255,0.45) 82%,
+              rgba(255,255,255,0) 92%);
+  opacity: calc(var(--reflejo) * var(--d));
+}
+
+/* ---------- El cartel ---------- */
+.obra figcaption {
+  margin-top: 20px; text-align: center; max-width: 260px;
+  opacity: calc(1 - 0.55 * var(--d));
+}
+.obra figcaption .titulo { font-size: 18px; font-weight: 600; color: #efe6d8; }
+.obra figcaption .datos {
+  margin-top: 5px; font-size: 11.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #a2917d;
+}
+
+/* ---------- Variantes: qué capas se apagan en cada bloque ---------- */
+.sin-reflejo .reflejo { display: none; }
+.sin-persp .marco { transform: none; }
+
+/* ---------- Nota al pie ---------- */
+.nota {
+  margin-top: 70px; padding: 20px 24px; border-left: 2px solid #6b5641;
+  max-width: 80ch; font-size: 15.5px; line-height: 1.6; color: #b1a493;
+}
+.nota b { color: #efe6d8; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="controles">
+  <h1>Prueba de luz, reflejo y perspectiva<small>archivo descartable · no es el prototipo</small></h1>
+
+  <div class="ctl">
+    <label>Distancia al centro <b id="v-d">0.70</b></label>
+    <input type="range" id="s-d" min="0" max="1" step="0.01" value="0.7">
+  </div>
+  <div class="ctl">
+    <label>Luz (halo) <b id="v-luz">0.22</b></label>
+    <input type="range" id="s-luz" min="0" max="0.45" step="0.01" value="0.22">
+  </div>
+  <div class="ctl">
+    <label>Reflejo <b id="v-reflejo">0.12</b></label>
+    <input type="range" id="s-reflejo" min="0" max="0.30" step="0.01" value="0.12">
+  </div>
+  <div class="ctl">
+    <label>Perspectiva <b id="v-persp">12°</b></label>
+    <input type="range" id="s-persp" min="0" max="24" step="1" value="12">
+  </div>
+  <div class="ctl">
+    <label>Penumbra <b id="v-penumbra">0.50</b></label>
+    <input type="range" id="s-penumbra" min="0" max="0.8" step="0.05" value="0.5">
+  </div>
+  <div class="ctl ctl-check">
+    <input type="checkbox" id="c-rebote" checked>
+    <label for="c-rebote">Rebote en la pared</label>
+  </div>
+  <div class="ctl ctl-check">
+    <input type="checkbox" id="c-veta">
+    <label for="c-veta">Veta de la madera</label>
+  </div>
+  <div class="ctl ctl-check">
+    <input type="checkbox" id="c-filete">
+    <label for="c-filete">Filete oscuro</label>
+  </div>
+  <div class="ctl">
+    <label>Pared</label>
+    <select id="s-pared">
+      <option value="#1d1a16" selected>Marrón-negro cálido (propuesta)</option>
+      <option value="#14120f">Casi negro cálido</option>
+      <option value="#1a201c">Verde frío (el de Branding)</option>
+      <option value="#2b2620">Penumbra clara</option>
+    </select>
+  </div>
+  <div class="ctl">
+    <label>Passepartout</label>
+    <select id="s-passe">
+      <option value="#e6ddcd" selected>Crema (propuesta)</option>
+      <option value="#cfc6b6">Crema apagado</option>
+      <option value="#8e887d">Gris medio</option>
+      <option value="#3a3630">Gris oscuro</option>
+    </select>
+  </div>
+</div>
+
+<main>
+
+  <!-- ======================= A ======================= -->
+  <section class="bloque">
+    <h2>A · Solo luz</h2>
+    <p>Halo sobre la pared, sombra proyectada, sombra de contacto, volumen de la madera y la sombra del passepartout sobre la obra. <em>Sin reflejo y sin perspectiva.</em> Es el piso: si esto ya se siente una sala, todo lo demás es opcional.</p>
+    <div class="fila sin-reflejo sin-persp" data-fila="comparacion"></div>
+  </section>
+
+  <!-- ======================= B ======================= -->
+  <section class="bloque">
+    <h2>B · Luz + reflejo del vidrio</h2>
+    <p>Lo mismo, más el reflejo diagonal del vidrio. <em>Mirá especialmente “Silla y tela”</em>: es una carbonilla en negativo, con mucho gris claro, y es donde sospecho que el reflejo va a ensuciar en vez de sumar. Movés “Distancia al centro” a 0 y el reflejo desaparece — así se ve la obra que el visitante tiene enfrente.</p>
+    <div class="fila sin-persp" data-fila="comparacion"></div>
+  </section>
+
+  <!-- ======================= C ======================= -->
+  <section class="bloque">
+    <h2>C · Luz + reflejo + perspectiva</h2>
+    <p>Se suma el <em>rotateY</em>: los cuadros que no mirás se ven de canto, como al caminar por una sala. Acá se juzga una sola cosa: a partir de cuántos grados la obra deja de leerse como obra y empieza a parecer una carta de un mazo.</p>
+    <div class="fila" data-fila="comparacion"></div>
+  </section>
+
+  <!-- ======================= D ======================= -->
+  <section class="bloque">
+    <h2>D · Cómo se vería en el recorrido</h2>
+    <p>Acá cada obra tiene su propia distancia al centro, como pasa de verdad durante el paseo: la del medio está de frente y limpia, las de los costados caen en penumbra, se inclinan y toman el reflejo. <em>Este bloque ignora el slider de distancia</em> — es la simulación real.</p>
+    <div class="fila" data-fila="recorrido"></div>
+  </section>
+
+  <div class="nota">
+    <b>Qué mirar, en orden:</b> primero si el bloque A ya se siente una sala (si sí, B y C son lujo, no necesidad). Después, en B, si el reflejo suma o ensucia — obra por obra, porque se comporta distinto en un acrílico, en un grabado chico, en una carbonilla y en un textil. Por último, en C, hasta cuántos grados aguanta la perspectiva.<br><br>
+    <b>Ojo con el bloque D:</b> es el único que muestra el efecto real. A, B y C ponen todas las obras a la misma distancia para poder compararlas entre sí, que en el recorrido nunca pasa.<br><br>
+    <b>Algo que apareció al armar esto:</b> varias obras están fotografiadas sobre fondo claro —“Mujeres” es la más evidente— y ese fondo se funde con el passepartout crema, así que el cuadro pierde el borde y la obra se desdibuja. Es un problema de enmarcado, no de código, y los enmarcadores lo resuelven hace siglos con un <b>filete</b>: una línea oscura fina entre el passepartout y la obra. Está el checkbox “Filete oscuro” para verlo, y el selector de passepartout para probar tonos más apagados.
+  </div>
+
+</main>
+
+<script>
+/* Las cuatro obras reales, con el tamaño que les toca según sus medidas
+   (el mismo criterio que la spec: chico / normal / grande). */
+const OBRAS = [
+  { img: 'assets/obra-retratos.png', titulo: 'Retratos',            datos: 'Acrílico con veladuras · 50×70 cm · 2025', tamano: 'normal', rebote: 'rgba(196,150,110,0.55)' },
+  { img: 'assets/obra-copa.png',     titulo: 'Copa de vino tinta',  datos: 'Aguatinta · 12×15 cm · 2023',             tamano: 'chico',  rebote: 'rgba(150,70,72,0.5)'    },
+  { img: 'assets/obra-silla.png',    titulo: 'Silla y tela',        datos: 'Carbonilla en negativo · 100×75 cm · 2022', tamano: 'grande', rebote: 'rgba(160,156,148,0.45)' },
+  { img: 'assets/obra-mujeres.png',  titulo: 'Mujeres',             datos: 'Textil — vellón y mostacillas · 60×60 cm · 2023', tamano: 'normal', rebote: 'rgba(198,120,120,0.5)' }
+];
+
+function marco(o, d, s) {
+  const f = document.createElement('figure');
+  f.className = 'obra';
+  f.dataset.tamano = o.tamano;
+  f.style.setProperty('--d', d);
+  f.style.setProperty('--s', s);
+  f.style.setProperty('--rebote', o.rebote);
+  f.innerHTML =
+    '<div class="rebote"></div>' +
+    '<div class="halo"></div>' +
+    '<div class="marco"><div class="passe"><div class="lienzo">' +
+      '<img src="' + o.img + '" alt="' + o.titulo + '">' +
+      '<div class="sombra-passe"></div>' +
+      '<div class="reflejo"></div>' +
+    '</div></div></div>' +
+    '<figcaption><div class="titulo">' + o.titulo + '</div><div class="datos">' + o.datos + '</div></figcaption>';
+  return f;
+}
+
+// Bloques A, B y C: las 4 obras a la MISMA distancia, para poder compararlas.
+document.querySelectorAll('[data-fila="comparacion"]').forEach((fila) => {
+  OBRAS.forEach((o) => fila.appendChild(marco(o, 0.7, 1)));
+});
+
+// Bloque D: cada obra a su propia distancia, como en el recorrido real.
+const RECORRIDO = [
+  { i: 0, d: 0.85, s: -1 },
+  { i: 1, d: 0.40, s: -1 },
+  { i: 2, d: 0.00, s:  1 },
+  { i: 3, d: 0.55, s:  1 }
+];
+document.querySelectorAll('[data-fila="recorrido"]').forEach((fila) => {
+  RECORRIDO.forEach((p) => fila.appendChild(marco(OBRAS[p.i], p.d, p.s)));
+});
+
+// ---- Controles ----
+const raiz = document.documentElement;
+const comparacion = () => document.querySelectorAll('[data-fila="comparacion"] .obra');
+
+function slider(id, salida, prop, formato) {
+  const s = document.getElementById(id);
+  const v = document.getElementById(salida);
+  const aplicar = () => {
+    v.textContent = formato(s.value);
+    if (prop) raiz.style.setProperty(prop, s.value);
+  };
+  s.addEventListener('input', aplicar);
+  aplicar();
+  return s;
+}
+
+slider('s-luz',      'v-luz',      '--luz',      (x) => Number(x).toFixed(2));
+slider('s-reflejo',  'v-reflejo',  '--reflejo',  (x) => Number(x).toFixed(2));
+slider('s-persp',    'v-persp',    '--persp',    (x) => x + '°');
+slider('s-penumbra', 'v-penumbra', '--penumbra', (x) => Number(x).toFixed(2));
+
+// La distancia solo afecta a los bloques comparativos, no a la simulación.
+const sd = document.getElementById('s-d');
+const vd = document.getElementById('v-d');
+const aplicarD = () => {
+  vd.textContent = Number(sd.value).toFixed(2);
+  comparacion().forEach((el) => el.style.setProperty('--d', sd.value));
+};
+sd.addEventListener('input', aplicarD);
+aplicarD();
+
+document.getElementById('c-rebote').addEventListener('change', (e) => {
+  raiz.style.setProperty('--rebote-on', e.target.checked ? 1 : 0);
+});
+document.getElementById('c-veta').addEventListener('change', (e) => {
+  raiz.style.setProperty('--veta-on', e.target.checked ? 1 : 0);
+});
+document.getElementById('c-filete').addEventListener('change', (e) => {
+  raiz.style.setProperty('--filete-on', e.target.checked ? 1 : 0);
+});
+document.getElementById('s-pared').addEventListener('change', (e) => {
+  raiz.style.setProperty('--pared', e.target.value);
+});
+document.getElementById('s-passe').addEventListener('change', (e) => {
+  raiz.style.setProperty('--passe', e.target.value);
+});
+</script>
+</body>
+</html>

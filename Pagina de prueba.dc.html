@@ -34,6 +34,113 @@
   [data-zoom]:focus-visible, .zoom-marco:focus-visible { outline: 2px solid #7a948b; outline-offset: 3px; }
   [data-zoom]:focus:not(:focus-visible), .zoom-marco:focus:not(:focus-visible) { outline: none; }
 
+
+  /* ================= 01 Galería — la sala =================
+     A diferencia del resto de la página, esta sección lleva sus estilos acá y
+     no en atributos style: necesita cambiar de layout en celular, y una regla
+     de media query no puede ganarle a un style inline.
+     Qué es seguro tocar: --pared-sala (el color de la pared), --luz-sala (la
+     intensidad del foco) y --penumbra-sala (cuánto se apagan las obras que no
+     estás mirando). El tamaño de cada obra NO se toca acá: sale de su medida
+     real, escrita en el atributo data-cm de cada obra. */
+  :root {
+    --pared-sala: #1d1a16;   /* marrón-negro cálido: la pared de la sala */
+    --luz-sala: 0.35;        /* opacidad del foco sobre la pared */
+    --penumbra-sala: 0.50;   /* cuánto brillo pierde una obra al alejarse del centro */
+  }
+
+  /* ---- Transición: se apagan las luces ---- */
+  /* El sticky no tiene fondo propio: deja ver el crema de la página y encima
+     sube una capa oscura. Por eso el apagado se lee como que la luz baja,
+     y no como un bloque nuevo que aparece. */
+  #apagon-zone { height: 160vh; position: relative; }
+  #apagon-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  #apagon-wash { position: absolute; inset: 0; background: var(--pared-sala); opacity: 0; }
+  /* La misma viñeta que la sala, para que al terminar el apagón los dos oscuros
+     sean idénticos y el traspaso no deje una banda visible. Va adentro del wash
+     para que aparezca junto con él y no ensucie el crema del principio. */
+  #apagon-wash::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.5) 100%);
+  }
+
+  #galeria { position: relative; }
+  #galeria-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--pared-sala); }
+  #galeria-sala { position: absolute; inset: 0; }
+  /* viñeta: hunde los bordes de la pantalla en penumbra */
+  #galeria-sala::after {
+    content: ''; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.5) 100%);
+  }
+  /* El riel ocupa todo el alto y centra verticalmente: todas las obras quedan
+     colgadas a la misma línea de ojo, midan lo que midan, como en una sala real. */
+  #galeria-riel {
+    position: absolute; top: 0; left: 0; height: 100%;
+    display: flex; align-items: center; gap: clamp(90px, 12vw, 220px);
+    padding: 0 4vw; will-change: transform;
+  }
+  #galeria-avance { position: absolute; left: 0; bottom: 0; height: 2px; z-index: 10; background: rgba(224,201,166,0.75); width: 0; }
+
+  /* ---- El texto de pared (statement) ---- */
+  /* Ancho propio: si se lo hiciera depender del hueco que deja la primera obra,
+     con una obra ancha el texto quedaba en una columna de 240px y se estiraba a
+     lo alto más que la pantalla. Con ancho fijo entra siempre; el arranque del
+     recorrido se corre lo necesario para que el texto se vea entero. */
+  #galeria-panel { flex: 0 0 auto; width: clamp(280px, 30vw, 460px); color: #e8dfd2; }
+  #galeria-panel .kicker { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: #a2917d; margin-bottom: 14px; }
+  #galeria-panel h2 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(28px, 3vw, 40px); margin: 0 0 10px; color: #f2ece4; }
+  #galeria-panel .tag { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #8d7f6d; margin-bottom: 22px; }
+  #galeria-panel #statement-lines { font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(15px, 1.35vw, 19px); line-height: 1.55; margin: 0; color: #cfc3b2; }
+
+  /* ---- Una obra enmarcada ---- */
+  .obra-sala { --d: 0; --alto: 44; flex: 0 0 auto; position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; }
+  .obra-sala .halo {
+    position: absolute; left: -24%; right: -24%; top: -28%; bottom: 2%; opacity: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 38%, rgba(247,236,214,1) 0%, rgba(247,236,214,0.42) 32%, rgba(247,236,214,0) 66%);
+  }
+  /* rebote: la pared toma un tinte del color de la obra */
+  .obra-sala .rebote {
+    position: absolute; left: -12%; right: -12%; top: -10%; bottom: -10%; opacity: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, var(--rebote) 0%, transparent 62%); filter: blur(34px);
+  }
+  .obra-sala .marco {
+    position: relative; z-index: 1; padding: 16px;
+    background: linear-gradient(160deg, #7a6449 0%, #5b4a36 55%, #4a3c2b 100%);
+    box-shadow: 0 20px 38px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.45),
+                inset 0 1px 0 rgba(255,240,214,0.22), inset 0 -1px 0 rgba(0,0,0,0.45);
+  }
+  .obra-sala .passe { padding: 20px; background: #e6ddcd; }
+  /* Obras cuya imagen llega hasta el borde van sin passepartout: un pase implica
+     que la obra termina ahí, y contradice una imagen que sigue de largo. */
+  .obra-sala[data-sangra] .passe { padding: 0; }
+  .obra-sala .lienzo { position: relative; line-height: 0; }
+  .obra-sala .lienzo img { display: block; width: auto; height: calc(var(--alto) * 1vh); }
+  /* la sombra que el passepartout tira sobre la obra: la hunde dentro del marco */
+  .obra-sala .sombra-passe { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 3px 9px rgba(0,0,0,0.35); }
+
+  .cartel-sala { margin-top: 20px; text-align: center; max-width: 340px; }
+  .cartel-sala .titulo { font-family: 'EB Garamond', serif; font-size: 18px; font-weight: 600; color: #efe6d8; }
+  .cartel-sala .datos { margin-top: 5px; font-family: 'EB Garamond', serif; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #a2917d; }
+
+  /* ---- Celular y motion reducido: la sala se vuelve una pared vertical ----
+     Misma pared, mismos marcos, misma luz, pero apiladas y con scroll normal.
+     El scroll de la página nunca se captura. */
+  @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+    /* !important solo acá: el alto de la zona lo escribe el script como style inline */
+    #galeria { height: auto !important; }
+    #galeria-sticky { position: static; height: auto; }
+    #galeria-sala { position: static; }
+    #galeria-sala::after { display: none; }
+    #galeria-riel { position: static; flex-direction: column; gap: 64px; padding: clamp(50px,8vh,90px) clamp(20px,5vw,96px); transform: none !important; }
+    #galeria-panel { max-width: min(62ch, 100%); }
+    /* en vertical manda el ancho: se dimensiona la obra entera, marco incluido */
+    .obra-sala { --d: 0 !important; width: min(100%, calc(var(--alto) * 7.4px)); }
+    .obra-sala .marco { width: 100%; }
+    .obra-sala .lienzo img { width: 100%; height: auto; }
+    .obra-sala .halo, .obra-sala .rebote { opacity: 0.5 !important; }
+    #galeria-avance { display: none; }
+  }
+
   /* ---- Visor (lightbox): apertura y cierre suaves ---- */
   #lightbox { opacity: 0; transition: opacity 0.3s ease; }
   #lightbox.abierto { opacity: 1; }
@@ -48,7 +155,7 @@
   <div style="max-width: 1440px; margin: 0 auto; padding: 14px clamp(20px, 4vw, 56px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
     <a href="#intro" style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; color: #2d423b; text-decoration: none;">Katharina Armbruster</a>
     <div style="margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 2.5vw, 32px); flex-wrap: wrap;">
-      <a href="#obra" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-obra"><span style="font-size: 13px; color: #5c7167;">01</span> Obra</a>
+      <a href="#galeria" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-galeria"><span style="font-size: 13px; color: #5c7167;">01</span> Galería</a>
       <a href="#mural" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-mural"><span style="font-size: 13px; color: #5c7167;">02</span> Mural</a>
       <a href="#branding" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-branding"><span style="font-size: 13px; color: #5c7167;">03</span> Branding</a>
       <button id="lang-toggle" type="button" aria-label="Idioma / Language" title="Español / English" style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.06em; color: #2d423b; background: transparent; border: 1px solid rgba(45,66,59,0.35); border-radius: 999px; padding: 4px 5px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; line-height: 1;">
@@ -87,7 +194,7 @@
       <a href="#" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: underline; text-underline-offset: 4px;" data-i18n="intro-cv">Descargar CV (PDF)</a>
     </div>
     <div style="border-top: 1px solid rgba(45,66,59,0.3); padding-top: 18px; display: flex; gap: clamp(24px, 4vw, 48px); flex-wrap: wrap;">
-      <a href="#obra" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">01</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-obra">Obra</span></a>
+      <a href="#galeria" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">01</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-galeria">Galería</span></a>
       <a href="#mural" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">02</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-mural">Mural</span></a>
       <a href="#branding" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">03</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-branding">Branding</span></a>
     </div>
@@ -97,64 +204,189 @@
   </div>
 </div>
 
-<!-- ===== 01 Obra ===== -->
-<div id="obra" data-screen-label="Obra" style="max-width: 1440px; margin: 0 auto; padding: clamp(60px, 10vh, 110px) clamp(20px, 5vw, 96px) clamp(50px, 8vh, 90px); color: #2d423b; display: flex; flex-direction: column; gap: clamp(40px, 6vh, 64px);">
-  <div style="display: flex; align-items: baseline; gap: 18px; border-bottom: 1px solid rgba(122,148,139,0.5); padding-bottom: 24px; flex-wrap: wrap;">
-    <span style="font-family: 'EB Garamond', serif; font-size: 20px; color: #7a948b;">01</span>
-    <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0;" data-i18n="obra-title">Obra</h2>
-    <span style="font-family: 'EB Garamond', serif; font-size: clamp(13px, 1.2vw, 16px); letter-spacing: 0.16em; text-transform: uppercase; color: #5c7167; margin-left: auto;" data-i18n="obra-tag">Obra de taller — pintura, grabado, textil, instalación</span>
+<!-- ===== Transición: se apagan las luces ===== -->
+<!-- Da aire entre lo anterior y la sala, y pone al visitante en ambiente: el
+     fondo se va apagando desde el crema de la página hasta el oscuro de la
+     sala. Es una zona independiente a propósito — cuando se sume otra sección
+     entre la intro y la galería, esta transición sigue funcionando igual.
+     Para darle más o menos aire: cambiá el alto de #apagon-zone. -->
+<div id="apagon-zone">
+  <div id="apagon-sticky">
+    <div id="apagon-wash"></div>
   </div>
+</div>
 
-  <div style="display: grid; grid-template-columns: clamp(20px, 4vw, 56px) 1fr;">
-    <div style="border-left: 2px solid #7a948b;"></div>
-    <p id="statement-lines" style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(20px, 2.1vw, 27px); line-height: 1.5; margin: 0; max-width: 62ch;"><span data-i18n="obra-stmt-1">La práctica se articula en torno a la exploración de la intimidad, la memoria y la ambigüedad como territorios sensibles de percepción. </span><span data-i18n="obra-stmt-2">A través de capas, transparencias y materialidades diversas, el trabajo construye superficies de superposición y velamiento donde la imagen aparece en un estado inestable, entre la presencia y la ausencia. </span><span data-i18n="obra-stmt-3">Mi obra propone una aproximación atmosférica y afectiva, en la que los rastros, las huellas y las tensiones entre lo visible y lo oculto activan lecturas abiertas y fragmentarias de la experiencia.</span></p>
-  </div>
+<!-- ===== 01 Galería ===== -->
+<!-- La sala. Al entrar, el scroll vertical se traduce en un recorrido horizontal
+     por las obras; al llegar a la última, la página sigue con la sección Mural.
+     El alto de esta zona lo calcula el script (una pantalla + medio alto de
+     pantalla por obra): si agregás o sacás una obra, se ajusta solo.
+     El tamaño de cada obra sale de su medida real, en el atributo data-cm. -->
+<div id="galeria" data-screen-label="Galería">
+  <div id="galeria-sticky">
+    <div id="galeria-sala">
+      <div id="galeria-riel">
 
-  <div data-fade style="display: flex; gap: clamp(24px, 3.5vw, 48px); align-items: flex-end; flex-wrap: wrap;">
-    <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-26" src="assets/obra-retratos.png" alt="Retratos — acrílico con veladuras" style="flex: 1 1 480px; min-width: 0; max-width: 860px; display: block; cursor: zoom-in;">
-    <div style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px;" data-drift="22">
-      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 24px; margin: 0;" data-i18n="retratos-title">Retratos</h3>
-      <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;" data-i18n="retratos-desc">Pintura a modo de estudio, realizada con veladuras en acrílico. Representa personajes abstraídos de un espacio físico reconocible y atemporal, donde las miradas son protagonistas y construyen la narrativa.</p>
-      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="retratos-meta">Acrílico con veladuras · 50×70 cm · 2025</div>
-    </div>
-  </div>
+        <div id="galeria-panel">
+          <div class="kicker">01 — <span data-i18n="galeria-kicker">Galería</span></div>
+          <h2 data-i18n="galeria-title">Obra</h2>
+          <div class="tag" data-i18n="obra-tag">Obra de taller — pintura, grabado, textil, instalación</div>
+          <p id="statement-lines"><span data-i18n="obra-stmt-1">La práctica se articula en torno a la exploración de la intimidad, la memoria y la ambigüedad como territorios sensibles de percepción. </span><span data-i18n="obra-stmt-2">A través de capas, transparencias y materialidades diversas, el trabajo construye superficies de superposición y velamiento donde la imagen aparece en un estado inestable, entre la presencia y la ausencia. </span><span data-i18n="obra-stmt-3">Mi obra propone una aproximación atmosférica y afectiva, en la que los rastros, las huellas y las tensiones entre lo visible y lo oculto activan lecturas abiertas y fragmentarias de la experiencia.</span></p>
+        </div>
 
-  <div style="display: flex; gap: clamp(28px, 5vw, 72px); align-items: flex-start; flex-wrap: wrap;">
-    <div data-fade style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 14px; margin-top: clamp(0px, 5vh, 72px);">
-      <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-30" src="assets/obra-copa.png" alt="Copa de vino tinta — aguatinta" style="width: 100%; display: block; cursor: zoom-in;">
-      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;" data-i18n="copa-title">Copa de vino tinta</h3>
-      <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;" data-i18n="copa-desc">Aguatinta realizada a modo de estudio, que destaca la individualidad y la soledad en el acto compartido de la celebración, los encuentros y el brindis.</p>
-      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="copa-meta">Aguatinta (grabado) · 12×15 cm · 2023</div>
-    </div>
-    <div data-fade style="flex: 1.3 1 380px; display: flex; flex-direction: column; gap: 14px;">
-      <img data-lightbox data-zoom tabindex="0" role="button" data-drift="20" src="assets/obra-silla.png" alt="Silla y tela — carbonilla en negativo" style="width: 100%; display: block; cursor: zoom-in;">
-      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 21px; margin: 0;" data-i18n="silla-title">Silla y tela</h3>
-      <p style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.5; margin: 0;" data-i18n="silla-desc">Estudio de carbonilla en negativo, realizado con goma de caucho sobre papel escenográfico. Tratando una vez más sobre el vacío y la ausencia.</p>
-      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="silla-meta">Carbonilla en negativo · 100×75 cm · 2022</div>
-    </div>
-  </div>
+      <figure class="obra-sala" data-cm="60x80" style="--rebote: rgba(150,170,200,0.45);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Azules en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/azules-recorte.jpg" alt="Azules — collage de grabados en tonos azules sobre papel" data-caption="Azules — Collage de grabados (punta seca, aguafuerte, collagraph y serigrafía) · 60×80 cm · 2025">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-azules-titulo">Azules</div>
+          <div class="datos" data-i18n="g-azules-datos">Collage de grabados (punta seca, aguafuerte, collagraph y serigrafía) · 60×80 cm · 2025</div>
+        </figcaption>
+      </figure>
 
-  <div data-fade style="display: flex; gap: 24px; align-items: center; padding: 0 clamp(0px, 4vw, 56px); flex-wrap: wrap;">
-    <img data-drift="-18" src="assets/clima-cuaderno.png" alt="Cuaderno de estudios en el taller" style="flex: 1 1 300px; min-width: 0; max-width: 560px; display: block;">
-    <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 18px; padding: 0 clamp(0px, 2vw, 24px);">
-      <img data-drift="24" src="assets/clima-patio.png" alt="Obra colgada con broches en el patio" style="width: 78%; display: block; align-self: flex-end;">
-      <div style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; color: #5c7167; align-self: flex-end;" data-i18n="taller-caption">Cuaderno y patio — el taller</div>
-    </div>
-  </div>
+      <figure class="obra-sala" data-cm="32x22" style="--rebote: rgba(200,130,70,0.5);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Coatí en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/coati.jpg" alt="Coatí — punta seca de un coatí en tonos ocres" data-caption="Coatí — Punta seca · 32×22 cm · 2023">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-coati-titulo">Coatí</div>
+          <div class="datos" data-i18n="g-coati-datos">Punta seca · 32×22 cm · 2023</div>
+        </figcaption>
+      </figure>
 
-  <div data-fade style="display: flex; gap: clamp(24px, 3.5vw, 48px); align-items: flex-end; padding: 0 clamp(0px, 3vw, 48px); flex-wrap: wrap-reverse;">
-    <div style="flex: 1 1 300px; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px;" data-drift="18">
-      <h3 style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 24px; margin: 0;" data-i18n="mujeres-title">Mujeres</h3>
-      <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.55; margin: 0;" data-i18n="mujeres-desc">Trabajo textil realizado con vellón y mostacillas. Demanda los espacios y roles laborales, como también la relación histórica entre la costura y las mujeres: un tejido roto, caracterizado con lastimaduras sobre piel abierta. Expuesta en Espacio Barbuda, CABA (2026).</p>
-      <div style="font-family: 'EB Garamond', serif; font-size: 13.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #5c7167;" data-i18n="mujeres-meta">Textil — vellón y mostacillas · 60×60 cm · 2023</div>
+      <figure class="obra-sala" data-cm="10x12" style="--rebote: rgba(150,148,145,0.45);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Copa de vino en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/copa-de-vino.jpg" alt="Copa de vino — aguafuerte de una mano sosteniendo una copa" data-caption="Copa de vino — Aguafuerte · 10×12 cm (solo impresión) · 2023">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-copa-titulo">Copa de vino</div>
+          <div class="datos" data-i18n="g-copa-datos">Aguafuerte · 10×12 cm (solo impresión) · 2023</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="21x15" style="--rebote: rgba(190,110,70,0.5);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver La mañana en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/la-manana.jpg" alt="La mañana — acuarela de formas orgánicas en tonos tierra" data-caption="La mañana — Acuarela · 21×15 cm · 2026">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-manana-titulo">La mañana</div>
+          <div class="datos" data-i18n="g-manana-datos">Acuarela · 21×15 cm · 2026</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="30x50" data-sangra style="--rebote: rgba(150,80,70,0.5);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Estudio de color en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/estudio-de-color.jpg" alt="Estudio de color — naturaleza muerta con botella verde, capitel y torso" data-caption="Estudio de color — Acrílico sobre papel · 30×50 cm · 2024">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-estcolor-titulo">Estudio de color</div>
+          <div class="datos" data-i18n="g-estcolor-datos">Acrílico sobre papel · 30×50 cm · 2024</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="70x50" data-sangra style="--rebote: rgba(90,170,200,0.5);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Septiembre en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/septiembre.jpg" alt="Septiembre — flores magenta sobre fondo celeste" data-caption="Septiembre — Acrílico sobre papel y pasteles de tiza · 70×50 cm · 2025">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-septiembre-titulo">Septiembre</div>
+          <div class="datos" data-i18n="g-septiembre-datos">Acrílico sobre papel y pasteles de tiza · 70×50 cm · 2025</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="80x80" style="--rebote: rgba(190,180,165,0.45);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Mujeres en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/mujeres-recorte.jpg" alt="Mujeres — obra textil de vellón blanco atravesada por hilos rojos" data-caption="Mujeres — Textil · 80×80 cm · 2023">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-mujeres-titulo">Mujeres</div>
+          <div class="datos" data-i18n="g-mujeres-datos">Textil · 80×80 cm · 2023</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="22x32" style="--rebote: rgba(190,150,150,0.45);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Sin título en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/sin-titulo.jpg" alt="Sin título — dibujo en grafito de color de una figura recostada" data-caption="Sin título — Grafito de color · 22×32 cm · 2022">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-sintitulo-titulo">Sin título</div>
+          <div class="datos" data-i18n="g-sintitulo-datos">Grafito de color · 22×32 cm · 2022</div>
+        </figcaption>
+      </figure>
+
+      <figure class="obra-sala" data-cm="100x70" style="--rebote: rgba(160,150,138,0.45);">
+        <span class="rebote"></span><span class="halo"></span>
+        <div class="marco">
+          <div class="passe">
+            <div class="lienzo zoom-marco" tabindex="0" role="button" aria-label="Ver Estudio en grande">
+              <img class="zoom-img" data-lightbox src="assets/dossier/estudio-carbonilla.jpg" alt="Estudio — carbonilla de una silla con tela y un azulejo con una planta" data-caption="Estudio — Carbonilla · 100×70 cm · 2022">
+              <span class="sombra-passe"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cartel-sala">
+          <div class="titulo" data-i18n="g-estudio-titulo">Estudio</div>
+          <div class="datos" data-i18n="g-estudio-datos">Carbonilla · 100×70 cm · 2022</div>
+        </figcaption>
+      </figure>
+
+      </div>
     </div>
-    <img data-lightbox data-zoom tabindex="0" role="button" data-drift="-24" src="assets/obra-mujeres.png" alt="Mujeres — obra textil" style="flex: 1 1 380px; min-width: 0; max-width: 640px; display: block; cursor: zoom-in;">
+    <div id="galeria-avance"></div>
   </div>
 </div>
 
 <!-- ===== Transición: lunares que invaden ===== -->
 <div id="dots-zone" style="height: 170vh; position: relative;">
-  <div id="dots-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden;">
+  <div id="dots-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; background: #1d1a16;">
     <span class="dot" style="position: absolute; left: 10%; top: 68%; width: 16px; height: 16px; border-radius: 50%; background: #8FD0C2;"></span>
     <span class="dot" style="position: absolute; left: 22%; top: 30%; width: 12px; height: 12px; border-radius: 50%; background: #F2B8C6;"></span>
     <span class="dot" style="position: absolute; left: 34%; top: 58%; width: 26px; height: 26px; border-radius: 50%; background: #E3B96E;"></span>
@@ -546,9 +778,119 @@ class Component extends DCLogic {
       io.observe(win);
     });
 
+    // ================= 01 Galería — el recorrido por la sala =================
+    // El scroll vertical dentro de #galeria se traduce en desplazamiento
+    // horizontal del riel. Qué es seguro cambiar acá: ALTO_POR_OBRA (cuánto
+    // dura el paseo por cada obra) y ESCALA_REAL (cuánto se respeta la
+    // diferencia de tamaño real entre obras: 1 = fiel, 0 = todas iguales).
+    const ALTO_POR_OBRA = 50;    // en vh, por obra
+    const ESCALA_REAL   = 0.20;
+    const ALTO_MAX = 56, ALTO_MIN = 9;   // alto de la obra en pantalla, en vh
+    const FIN_DEL_PASEO = 0.85;  // el 15% final la última obra se queda quieta y centrada
+
+    const gZona   = document.getElementById('galeria');
+    const gRiel   = document.getElementById('galeria-riel');
+    const gPanel  = document.getElementById('galeria-panel');
+    const gAvance = document.getElementById('galeria-avance');
+    const gObras  = gRiel ? Array.from(gRiel.querySelectorAll('.obra-sala')) : [];
+
+    // El tamaño de cada obra sale de su medida real (data-cm="60x80"). Se usa la
+    // raíz del área porque así no importa si la medida está escrita ancho×alto
+    // o al revés — en el dossier el orden es inconsistente.
+    const medidaDe = (el) => {
+      const partes = (el.dataset.cm || '1x1').split('x').map(Number);
+      return Math.sqrt((partes[0] || 1) * (partes[1] || 1));
+    };
+    const medidaMayor = gObras.length ? Math.max.apply(null, gObras.map(medidaDe)) : 1;
+    gObras.forEach((el) => {
+      const alto = ALTO_MAX * Math.pow(medidaDe(el) / medidaMayor, ESCALA_REAL);
+      el.style.setProperty('--alto', Math.max(ALTO_MIN, alto).toFixed(1));
+    });
+
+    // ---- Transición: se apagan las luces ----
+    // El fondo se apaga en el primer 72% de la zona; el 28% final queda a
+    // oscuras, de modo que se entra a la sala con los ojos ya hechos.
+    const apagonZone  = document.getElementById('apagon-zone');
+    const apagonWash  = document.getElementById('apagon-wash');
+    const updateApagon = () => {
+      if (!apagonZone) return;
+      const vh = window.innerHeight;
+      const r = apagonZone.getBoundingClientRect();
+      const p = clamp01(-r.top / Math.max(1, apagonZone.offsetHeight - vh));
+      if (apagonWash) apagonWash.style.opacity = String(clamp01(p / 0.72));
+    };
+
+    const salaVertical = () => window.matchMedia('(max-width: 900px), (prefers-reduced-motion: reduce)').matches;
+    const centroEnRiel = (el) => el.offsetLeft + el.offsetWidth / 2;
+    let gx0 = 0, gx1 = 0, gVertical = false;
+
+    const medirGaleria = () => {
+      if (!gZona || !gObras.length) return;
+      gVertical = salaVertical();
+      if (gVertical) { gRiel.style.transform = ''; gZona.style.height = ''; return; }
+      const vw = window.innerWidth;
+      gx0 = vw / 2 - centroEnRiel(gObras[0]);
+      gx1 = vw / 2 - centroEnRiel(gObras[gObras.length - 1]);
+      // Si la primera obra es muy ancha, centrarla empuja el texto de pared
+      // fuera de pantalla. En ese caso gana el texto: es lo primero que se lee.
+      gx0 = Math.max(gx0, 40 - gPanel.offsetLeft);
+      gZona.style.height = (100 + gObras.length * ALTO_POR_OBRA) + 'vh';
+    };
+
+    const updateGaleria = () => {
+      if (!gZona || !gObras.length) return;
+      const vh = window.innerHeight, vw = window.innerWidth;
+      const rz = gZona.getBoundingClientRect();
+
+      if (gVertical) return;
+      const p = clamp01(-rz.top / (gZona.offsetHeight - vh));
+      // El paseo ocupa el primer 85%: sin eso la última obra llega al centro
+      // justo cuando la sección ya se está yendo, y nunca se la ve.
+      const pRiel = clamp01(p / FIN_DEL_PASEO);
+      gRiel.style.transform = 'translateX(' + (gx0 + (gx1 - gx0) * pRiel) + 'px)';
+      if (gAvance) gAvance.style.width = (p * 100) + '%';
+
+      // las luces suben al entrar; no arrancan en cero, si no quien cae en p=0 no ve nada
+      const entrada = 0.35 + 0.65 * clamp01(p / 0.10);
+      const raiz = getComputedStyle(document.documentElement);
+      const luz = parseFloat(raiz.getPropertyValue('--luz-sala')) || 0.35;
+      const penumbra = parseFloat(raiz.getPropertyValue('--penumbra-sala')) || 0.5;
+
+      gObras.forEach((o) => {
+        const r = o.getBoundingClientRect();
+        const d = clamp01(Math.abs(r.left + r.width / 2 - vw / 2) / (vw * 0.42));
+        const marco = o.querySelector('.marco');
+        marco.style.filter = 'brightness(' + (1 - penumbra * d).toFixed(3) + ')';
+        marco.style.scale = String((1 - 0.03 * d).toFixed(3));
+        o.querySelector('.halo').style.opacity = String(luz * (1 - d) * entrada);
+        o.querySelector('.rebote').style.opacity = String(0.32 * (1 - d) * entrada);
+        o.querySelector('.cartel-sala').style.opacity = String(1 - 0.55 * d);
+      });
+    };
+
+    // Teclado: al tabular hacia una obra que está fuera de pantalla el navegador
+    // no puede desplazarla (el riel se mueve por transform), así que hay que
+    // llevarla al centro invirtiendo el mapeo. No se reparte por índice: las
+    // obras tienen anchos distintos, así que índice y posición no coinciden.
+    gObras.forEach((o) => {
+      const foco = o.querySelector('.zoom-marco');
+      if (!foco) return;
+      foco.addEventListener('focus', () => {
+        if (gVertical) return;
+        const xi = window.innerWidth / 2 - centroEnRiel(o);
+        const pi = clamp01((xi - gx0) / (gx1 - gx0));
+        const arriba = window.scrollY + gZona.getBoundingClientRect().top;
+        window.scrollTo({ top: arriba + pi * FIN_DEL_PASEO * (gZona.offsetHeight - window.innerHeight) });
+      });
+    });
+
+    window.addEventListener('resize', () => { medirGaleria(); updateGaleria(); updateApagon(); });
+    window.addEventListener('load', () => { medirGaleria(); updateGaleria(); updateApagon(); });
+    medirGaleria(); updateGaleria(); updateApagon();
+
     const prevOnScroll = this._onScroll;
     this._onScroll = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateOrder(); updateWindows(); ticking = false; }); }
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateApagon(); updateGaleria(); updateOrder(); updateWindows(); ticking = false; }); }
     };
     window.removeEventListener('scroll', prevOnScroll);
     window.addEventListener('scroll', this._onScroll, { passive: true });
@@ -620,7 +962,7 @@ class Component extends DCLogic {
     // (En el sitio final en Astro esto vivirá en el contenido bilingüe + src/i18n; esto es el prototipo.)
     const I18N_EN = {
       // Navegación
-      'nav-obra': `<span style="font-size: 13px; color: #5c7167;">01</span> Artwork`,
+      'nav-galeria': `<span style="font-size: 13px; color: #5c7167;">01</span> Gallery`,
       'nav-mural': `<span style="font-size: 13px; color: #5c7167;">02</span> Murals`,
       'nav-branding': `<span style="font-size: 13px; color: #5c7167;">03</span> Branding`,
       'nav-contacto': `Contact <span style="color: #ba7878;">→</span>`,
@@ -631,28 +973,37 @@ class Component extends DCLogic {
       'intro-quote': `“Surfaces of layering and veiling where the image appears in an unstable state, between presence and absence.”`,
       'intro-cta': `Contact & commissions <span style="color: #ba7878;">→</span>`,
       'intro-cv': `Download CV (PDF)`,
-      'hero-obra': `Artwork`,
+      'hero-galeria': `Gallery`,
       'hero-mural': `Murals`,
       'hero-branding': `Branding`,
-      // 01 Obra
-      'obra-title': `Artwork`,
+      // 01 Galería — la sala
+      // Los títulos de obra no se traducen (son nombres propios), igual que se
+      // decidió con «Mujeres». La excepción es «Sin título»: no es un nombre
+      // sino la ausencia de uno, y en inglés se dice «Untitled».
+      'galeria-kicker': `Gallery`,
+      'galeria-title': `Artwork`,
       'obra-tag': `Studio work — painting, printmaking, textile, installation`,
       'obra-stmt-1': `The practice revolves around the exploration of intimacy, memory and ambiguity as sensitive territories of perception. `,
       'obra-stmt-2': `Through layers, transparencies and diverse materialities, the work builds surfaces of overlapping and veiling where the image appears in an unstable state, between presence and absence. `,
       'obra-stmt-3': `My work proposes an atmospheric, affective approach in which traces, marks and the tensions between the visible and the hidden activate open, fragmentary readings of experience.`,
-      'retratos-title': `Portraits`,
-      'retratos-desc': `A study painting made with acrylic glazes. It portrays figures abstracted from any recognizable, timeless physical space, where the gazes take center stage and build the narrative.`,
-      'retratos-meta': `Acrylic glazes · 50×70 cm · 2025`,
-      'copa-title': `Glass of Red Wine`,
-      'copa-desc': `An aquatint made as a study, highlighting individuality and solitude within the shared act of celebration, gatherings and the toast.`,
-      'copa-meta': `Aquatint (printmaking) · 12×15 cm · 2023`,
-      'silla-title': `Chair and Cloth`,
-      'silla-desc': `A negative charcoal study made with a rubber eraser on scenographic paper. Once again addressing emptiness and absence.`,
-      'silla-meta': `Negative charcoal · 100×75 cm · 2022`,
-      'taller-caption': `Notebook and courtyard — the studio`,
-      'mujeres-title': `Mujeres`,
-      'mujeres-desc': `A textile work made with fleece and beads. It calls out workspaces and labor roles, as well as the historical relationship between sewing and women: a torn weave, marked with wounds over open skin. Exhibited at Espacio Barbuda, Buenos Aires (2026).`,
-      'mujeres-meta': `Textile — fleece and beads · 60×60 cm · 2023`,
+      'g-azules-titulo': `Azules`,
+      'g-azules-datos': `Print collage (drypoint, etching, collagraph and screenprint) · 60×80 cm · 2025`,
+      'g-coati-titulo': `Coatí`,
+      'g-coati-datos': `Drypoint · 32×22 cm · 2023`,
+      'g-copa-titulo': `Copa de vino`,
+      'g-copa-datos': `Etching · 10×12 cm (print only) · 2023`,
+      'g-manana-titulo': `La mañana`,
+      'g-manana-datos': `Watercolor · 21×15 cm · 2026`,
+      'g-estcolor-titulo': `Estudio de color`,
+      'g-estcolor-datos': `Acrylic on paper · 30×50 cm · 2024`,
+      'g-septiembre-titulo': `Septiembre`,
+      'g-septiembre-datos': `Acrylic on paper and chalk pastels · 70×50 cm · 2025`,
+      'g-mujeres-titulo': `Mujeres`,
+      'g-mujeres-datos': `Textile · 80×80 cm · 2023`,
+      'g-sintitulo-titulo': `Untitled`,
+      'g-sintitulo-datos': `Colored graphite · 22×32 cm · 2022`,
+      'g-estudio-titulo': `Estudio`,
+      'g-estudio-datos': `Charcoal · 100×70 cm · 2022`,
       // 02 Mural
       'mural-title': `Murals`,
       'mural-cap-full': `<span style="color: #5c7167;">02 Full wall</span> — Malaku Eventos`,
