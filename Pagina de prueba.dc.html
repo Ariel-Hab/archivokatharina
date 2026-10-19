@@ -16,6 +16,32 @@
   body { margin: 0; background: #ede3de; }
   a { color: #2d423b; }
   a:hover { color: #ba7878; }
+  /* support.js le fija al contenedor de la página el alto de UNA pantalla, y eso
+     hace que la barra de navegación (sticky) se suelte al bajar. Acá se lo devuelve
+     a su alto real para que la barra quede siempre visible. */
+  html body #dc-root, html body #dc-root > .sc-host { height: auto; min-height: 100%; }
+  /* El texto seleccionado toma los colores de la página, no el azul del navegador */
+  ::selection { background: #2d423b; color: #ede3de; }
+  #galeria ::selection, #exhibiciones ::selection { background: #e0c9a6; color: #1d1a16; }
+  /* Al saltar a una sección desde el menú, el título no queda tapado por la barra */
+  [data-screen-label] { scroll-margin-top: 66px; }
+  /* Celular: la barra pasa a dos renglones — arriba el nombre y Contacto, abajo
+     las secciones y el idioma. "Inicio" sobra: el nombre ya lleva al inicio.
+     (!important solo porque la barra tiene sus estilos escritos en línea.) */
+  @media (max-width: 700px) {
+    .nav-solo-ancho { display: none !important; }
+    .nav-fila { gap: 8px 11px !important; padding-top: 10px !important; padding-bottom: 10px !important; }
+    .nav-links { display: contents !important; }
+    .nav-nombre { order: 0; font-size: 17px !important; }
+    .nav-cta { order: 1; margin-left: auto; font-size: 15px !important; padding: 6px 14px !important; }
+    .nav-fila::after { content: ''; order: 2; flex-basis: 100%; height: 0; }
+    .nav-links > a:not(.nav-cta) { order: 3; font-size: 15px !important; }
+    #lang-toggle span { padding: 2px 7px !important; }
+    #lang-toggle { order: 4; margin-left: auto; }
+    [data-screen-label] { scroll-margin-top: 92px; }
+  }
+  /* en los celulares más angostos el idioma baja a un tercer renglón */
+  @media (max-width: 379px) { [data-screen-label] { scroll-margin-top: 124px; } }
 
   /* ---- Imágenes interactivas: el hover avisa que son clickeables ---- */
   /* Se usan las propiedades CSS individuales scale/translate (no el shorthand
@@ -24,7 +50,7 @@
   [data-zoom] { cursor: zoom-in; transition: scale 0.35s cubic-bezier(0.2,0.7,0.3,1), box-shadow 0.35s ease, filter 0.35s ease; }
   [data-zoom]:hover, [data-zoom]:focus-visible { scale: 1.035; box-shadow: 0 22px 55px rgba(20,24,21,0.28); filter: saturate(1.04) brightness(1.02); }
 
-  /* Imágenes enmarcadas (mural + piezas de branding): el zoom pasa DENTRO del marco recortado */
+  /* Imágenes enmarcadas (mural, sala y fotos de muestras): el zoom pasa DENTRO del marco recortado */
   .zoom-marco { overflow: hidden; cursor: zoom-in; position: relative; transition: box-shadow 0.35s ease; }
   .zoom-marco .zoom-img { transition: scale 0.45s cubic-bezier(0.2,0.7,0.3,1); }
   .zoom-marco:hover .zoom-img, .zoom-marco:focus-within .zoom-img { scale: 1.06; }
@@ -89,7 +115,7 @@
   #galeria-panel { flex: 0 0 auto; width: clamp(280px, 30vw, 460px); color: #e8dfd2; }
   #galeria-panel .kicker { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: #a2917d; margin-bottom: 14px; }
   #galeria-panel h2 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(28px, 3vw, 40px); margin: 0 0 10px; color: #f2ece4; }
-  #galeria-panel .tag { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #8d7f6d; margin-bottom: 22px; }
+  #galeria-panel .tag { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #978873; margin-bottom: 22px; }
   #galeria-panel #statement-lines { font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(15px, 1.35vw, 19px); line-height: 1.55; margin: 0; color: #cfc3b2; }
 
   /* ---- Una obra enmarcada ---- */
@@ -141,6 +167,74 @@
     #galeria-avance { display: none; }
   }
 
+  /* ================= Inicio — la pintura de fondo =================
+     Qué es seguro tocar: la imagen (src en el HTML), --velo-inicio (cuánto se
+     oscurece la pintura para que el nombre se lea) y el tamaño del nombre. */
+  :root { --velo-inicio: 0.42; }
+  #inicio { position: relative; height: calc(100vh - 60px); min-height: 460px; overflow: hidden; color: #f7f2ea; }
+  #intro-art { position: absolute; inset: 0; }
+  #intro-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; display: block; }
+  /* el velo: más denso abajo a la izquierda, donde va el nombre */
+  #inicio .velo { position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(100deg, rgba(20,28,24,var(--velo-inicio)) 0%, rgba(20,28,24,calc(var(--velo-inicio) * 0.45)) 45%, rgba(20,28,24,0) 75%); }
+  #intro-text { position: absolute; left: clamp(20px, 6vw, 96px); bottom: clamp(48px, 14vh, 140px); right: 20px; }
+  #intro-text h1 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(48px, 7.4vw, 112px); line-height: 0.98; margin: 0; letter-spacing: -0.01em; text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
+  #intro-text .linea { margin-top: 18px; font-family: 'EB Garamond', serif; font-size: clamp(14px, 1.2vw, 16px); letter-spacing: 0.22em; text-transform: uppercase; color: rgba(247,242,234,0.86); }
+
+  /* ================= Bio ================= */
+  #bio { background: #ede3de; color: #2d423b; }
+  #bio .bio-caja { max-width: 1240px; margin: 0 auto; padding: clamp(64px, 12vh, 128px) clamp(20px, 5vw, 80px); display: flex; gap: clamp(32px, 6vw, 96px); align-items: center; flex-wrap: wrap; }
+  #bio .bio-foto { flex: 0 1 380px; min-width: 240px; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 28px; }
+  #bio .bio-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 40%; display: block; }
+  #bio .bio-texto { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  #bio .bio-texto p { font-family: 'EB Garamond', serif; font-size: clamp(17px, 1.35vw, 19px); line-height: 1.6; margin: 0; max-width: 58ch; }
+
+  /* ================= 02 Exhibiciones =================
+     Sigue en la pared oscura de la sala: es el pasillo al salir de la galería.
+     Cada muestra es un tríptico de fotos + sus datos; "+ info" despliega la ficha.
+     Para sumar una muestra: copiá un bloque <article class="muestra"> completo.
+     Si falta una foto, dejá <div class="hueco"> en su lugar. */
+  #exhibiciones { background: var(--pared-sala); color: #e8dfd2; }
+  #exhibiciones .expo-caja { max-width: 1240px; margin: 0 auto; padding: clamp(80px, 14vh, 150px) clamp(20px, 5vw, 80px) clamp(60px, 10vh, 110px); display: flex; flex-direction: column; gap: clamp(72px, 12vh, 130px); }
+  #exhibiciones .expo-titulo { display: flex; align-items: baseline; gap: 18px; }
+  #exhibiciones .expo-titulo span { font-family: 'EB Garamond', serif; font-size: 20px; color: #a2917d; }
+  #exhibiciones h2 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0; color: #f2ece4; }
+  .muestra { display: flex; flex-direction: column; gap: 22px; }
+  .triptico { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1vw, 14px); }
+  .triptico > * { aspect-ratio: 4 / 5; }
+  .triptico .zoom-marco img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* hueco: una foto que todavía no llegó */
+  .triptico .hueco { background: #a08b72; display: flex; align-items: flex-end; padding: 14px; font-family: 'EB Garamond', serif; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #2a241d; }
+  .muestra-datos { display: flex; align-items: baseline; gap: 12px 28px; flex-wrap: wrap; border-top: 1px solid rgba(162,145,125,0.35); padding-top: 18px; }
+  .muestra-datos h3 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(22px, 2vw, 28px); margin: 0; color: #f2ece4; }
+  .muestra-datos .meta { font-family: 'EB Garamond', serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #a2917d; }
+  .muestra-datos .mas-info { margin-left: auto; font-family: 'EB Garamond', serif; font-size: 15px; letter-spacing: 0.06em; color: #e0c9a6; background: none; border: 1px solid rgba(224,201,166,0.45); border-radius: 999px; padding: 6px 16px; cursor: pointer; }
+  .muestra-datos .mas-info { display: inline-flex; align-items: center; gap: 9px; transition: background 0.25s ease, border-color 0.25s ease; }
+  .muestra-datos .mas-info:hover { background: rgba(224,201,166,0.12); }
+  .muestra.abierta .mas-info { border-color: #e0c9a6; }
+  /* el signo +: dos trazos que giran 45° y se vuelven una × cuando la ficha está abierta */
+  .mas-info .signo { position: relative; width: 10px; height: 10px; transition: rotate 0.35s cubic-bezier(0.2,0.7,0.3,1); }
+  .mas-info .signo::before, .mas-info .signo::after { content: ''; position: absolute; background: currentColor; }
+  .mas-info .signo::before { left: 0; right: 0; top: 4.5px; height: 1px; }
+  .mas-info .signo::after { top: 0; bottom: 0; left: 4.5px; width: 1px; }
+  .muestra.abierta .mas-info .signo { rotate: 45deg; }
+  .muestra-datos .mas-info:focus-visible { outline: 2px solid #e0c9a6; outline-offset: 3px; }
+  /* la ficha se despliega animando el alto de 0 a su contenido */
+  .muestra-ficha { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s cubic-bezier(0.2,0.7,0.3,1); }
+  .muestra-ficha > div { overflow: hidden; }
+  .muestra.abierta .muestra-ficha { grid-template-rows: 1fr; }
+  .muestra-ficha dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 28px; margin: 6px 0 0; font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.45; max-width: 760px; }
+  .muestra-ficha dt { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #978873; padding-top: 3px; }
+  .muestra-ficha dd { margin: 0; color: #e8dfd2; }
+  .muestra-ficha p { font-family: 'EB Garamond', serif; font-style: italic; font-size: 17px; line-height: 1.55; color: #cfc3b2; max-width: 62ch; margin: 18px 0 4px; }
+  .pendiente { font-family: 'IBM Plex Mono', monospace; font-style: normal; font-size: 12px; color: #8f8a80; }
+  @media (max-width: 700px) {
+    /* en celular el tríptico se desliza de costado */
+    .triptico { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 74%; overflow-x: auto; scroll-snap-type: x mandatory; }
+    .triptico > * { scroll-snap-align: start; }
+    .muestra-datos .mas-info { margin-left: 0; }
+  }
+
   /* ---- Visor (lightbox): apertura y cierre suaves ---- */
   #lightbox { opacity: 0; transition: opacity 0.3s ease; }
   #lightbox.abierto { opacity: 1; }
@@ -152,55 +246,60 @@
 
 <!-- ===== Nav ===== -->
 <div style="position: sticky; top: 0; z-index: 60; background: rgba(237,227,222,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(45,66,59,0.18);">
-  <div style="max-width: 1440px; margin: 0 auto; padding: 14px clamp(20px, 4vw, 56px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
-    <a href="#intro" style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; color: #2d423b; text-decoration: none;">Katharina Armbruster</a>
-    <div style="margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 2.5vw, 32px); flex-wrap: wrap;">
+  <div class="nav-fila" style="max-width: 1440px; margin: 0 auto; padding: 14px clamp(20px, 4vw, 56px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+    <a href="#inicio" class="nav-nombre" style="font-family: 'EB Garamond', serif; font-weight: 600; font-size: 19px; color: #2d423b; text-decoration: none;">Katharina Armbruster</a>
+    <div class="nav-links" style="margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 2.5vw, 32px); flex-wrap: wrap;">
+      <a href="#inicio" class="nav-solo-ancho" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-inicio">Inicio</a>
+      <a href="#bio" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-bio">Bio</a>
       <a href="#galeria" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-galeria"><span style="font-size: 13px; color: #5c7167;">01</span> Galería</a>
-      <a href="#mural" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-mural"><span style="font-size: 13px; color: #5c7167;">02</span> Mural</a>
-      <a href="#branding" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-branding"><span style="font-size: 13px; color: #5c7167;">03</span> Branding</a>
+      <a href="#exhibiciones" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-exhibiciones"><span style="font-size: 13px; color: #5c7167;">02</span> Exhibiciones</a>
+      <a href="#mural" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: none;" data-i18n="nav-mural"><span style="font-size: 13px; color: #5c7167;">03</span> Mural</a>
       <button id="lang-toggle" type="button" aria-label="Idioma / Language" title="Español / English" style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.06em; color: #2d423b; background: transparent; border: 1px solid rgba(45,66,59,0.35); border-radius: 999px; padding: 4px 5px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; line-height: 1;">
         <span data-lang-opt="es" style="padding: 3px 9px; border-radius: 999px; transition: background 0.25s ease, color 0.25s ease;">ES</span>
         <span data-lang-opt="en" style="padding: 3px 9px; border-radius: 999px; transition: background 0.25s ease, color 0.25s ease;">EN</span>
       </button>
-      <a href="#contacto" style="font-family: 'EB Garamond', serif; font-size: 16px; color: #ede3de; background: #2d423b; padding: 8px 18px; text-decoration: none;" data-i18n="nav-contacto">Contacto <span style="color: #ba7878;">→</span></a>
+      <a href="#contacto" class="nav-cta" style="font-family: 'EB Garamond', serif; font-size: 16px; color: #ede3de; background: #2d423b; padding: 8px 18px; text-decoration: none;" data-i18n="nav-contacto">Contacto <span style="color: #ba7878;">→</span></a>
     </div>
   </div>
 </div>
 
-<!-- ===== Intro ===== -->
-<div id="intro" data-screen-label="Intro" style="display: flex; flex-wrap: wrap; min-height: 88vh; max-width: 1600px; margin: 0 auto; position: relative;">
-  <div id="intro-text" style="position: relative; z-index: 1; flex: 1 1 580px; min-width: 0; padding: clamp(36px, 6vh, 80px) clamp(20px, 5vw, 80px) clamp(36px, 6vh, 64px); display: flex; flex-direction: column; gap: clamp(22px, 3.6vh, 36px); color: #2d423b; justify-content: center;">
-    <div style="font-family: 'EB Garamond', serif; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: #5c7167;" data-i18n="intro-eyebrow">Portfolio — Artista visual</div>
-    <div style="display: flex; flex-direction: column; gap: 16px;">
-      <h1 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(38px, 4.4vw, 58px); line-height: 1.05; margin: 0;">Katharina Armbruster</h1>
+<!-- ===== Inicio ===== -->
+<!-- La pintura de los nenúfares de fondo, con el nombre encima. Para cambiar la
+     pintura: cambiá el src de la imagen. Para que el nombre se lea mejor o peor:
+     --velo-inicio, en los estilos de arriba. -->
+<div id="inicio" data-screen-label="Inicio">
+  <div id="intro-art">
+    <img src="assets/nenufares-raw.png" alt="Nenúfares — pintura de Katharina Armbruster">
+  </div>
+  <div class="velo"></div>
+  <div id="intro-text">
+    <h1>Katharina<br>Armbruster</h1>
+    <div class="linea" data-i18n="inicio-linea">Artista visual — Buenos Aires</div>
+  </div>
+</div>
+
+<!-- ===== Bio ===== -->
+<!-- Trayectoria en tercera persona. El statement (su voz sobre la obra) NO va
+     acá: vive en la sala de la Galería, frente a las obras.
+     Texto: base de Kati (devoluciones, oct. 2026) + nombres y años de las
+     muestras. PENDIENTE: que Kati lo valide. -->
+<div id="bio" data-screen-label="Bio">
+  <div class="bio-caja">
+    <div class="bio-foto">
+      <img src="assets/kati-muestra.jpg" alt="Katharina Armbruster junto a su obra Azules en una muestra">
+    </div>
+    <div class="bio-texto">
       <div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; border: 1px solid #2d423b; border-radius: 999px; padding: 7px 16px;">
         <span style="width: 7px; height: 7px; border-radius: 50%; background: #ba7878; flex: none;"></span>
         <span style="font-family: 'EB Garamond', serif; font-size: clamp(11.5px, 1.1vw, 13.5px); letter-spacing: 0.13em; text-transform: uppercase;" data-i18n="intro-badge">Universidad Nacional de las Artes — Lic. en Artes Visuales</span>
       </div>
-    </div>
-    <div style="display: flex; gap: clamp(20px, 3vw, 36px); align-items: stretch; flex-wrap: wrap;">
-      <div style="flex: 0 0 auto; width: clamp(190px, 25vw, 280px); overflow: hidden;">
-        <img src="assets/kati.png" alt="Katharina Armbruster" style="width: 100%; height: 100%; object-fit: cover; object-position: 82% 55%; display: block; filter: saturate(0.92);">
-      </div>
-      <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 22px;">
-        <p style="font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.55; margin: 0; max-width: 54ch;" data-i18n="intro-bio">Artista visual de Zona Sur, Buenos Aires. Finalizando la Licenciatura en Artes Visuales con orientación en pintura (UNA), con formación en dibujo, pintura, cerámica, escultura, grabado y arte impreso. Expuso su obra textil <em>Mujeres</em> en Espacio Barbuda (CABA, 2026) y participó de la Clínica de Obra facilitada por Marina De Caro. Actualmente trabaja freelance en murales, ilustración y venta personalizada.</p>
-        <blockquote style="margin: 0; padding: 0 0 0 22px; border-left: 2px solid #7a948b;">
-          <p style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(19px, 1.9vw, 24px); line-height: 1.4; margin: 0; max-width: 44ch;" data-i18n="intro-quote">«Superficies de superposición y velamiento donde la imagen aparece en un estado inestable, entre la presencia y la ausencia.»</p>
-        </blockquote>
+      <p data-i18n="bio-1">Estudiante de la Licenciatura en Artes Visuales con orientación en Pintura (Universidad Nacional de las Artes). Su práctica abarca el dibujo, la pintura, el grabado, el textil, los medios digitales y la investigación visual, con enfoque en el desarrollo conceptual y la historia del arte.</p>
+      <p data-i18n="bio-2">En 2026 participó de las muestras colectivas <em>Mínima</em> —organizada por Andén 2222 en Galería Rimini—, la Muestra Textil de Artes Visuales de la EMAC, MACAB y Espacio Barbuda. Participó de la Clínica de Obra facilitada por Marina De Caro y de intercambios académicos internacionales. Vive y trabaja en Zona Sur, Buenos Aires, donde hace murales, ilustración y obra por encargo.</p>
+      <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 10px;">
+        <a href="#contacto" style="display: inline-flex; align-items: center; gap: 10px; background: #2d423b; color: #ede3de; text-decoration: none; font-family: 'EB Garamond', serif; font-size: 17px; letter-spacing: 0.04em; padding: 13px 26px;" data-i18n="intro-cta">Contacto y encargos <span style="color: #ba7878;">→</span></a>
+        <a href="#" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: underline; text-underline-offset: 4px;" data-i18n="intro-cv">Descargar CV (PDF)</a>
       </div>
     </div>
-    <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
-      <a href="#contacto" style="display: inline-flex; align-items: center; gap: 10px; background: #2d423b; color: #ede3de; text-decoration: none; font-family: 'EB Garamond', serif; font-size: 17px; letter-spacing: 0.04em; padding: 13px 26px;" data-i18n="intro-cta">Contacto y encargos <span style="color: #ba7878;">→</span></a>
-      <a href="#" style="font-family: 'EB Garamond', serif; font-size: 17px; color: #2d423b; text-decoration: underline; text-underline-offset: 4px;" data-i18n="intro-cv">Descargar CV (PDF)</a>
-    </div>
-    <div style="border-top: 1px solid rgba(45,66,59,0.3); padding-top: 18px; display: flex; gap: clamp(24px, 4vw, 48px); flex-wrap: wrap;">
-      <a href="#galeria" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">01</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-galeria">Galería</span></a>
-      <a href="#mural" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">02</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-mural">Mural</span></a>
-      <a href="#branding" style="text-decoration: none; display: flex; align-items: baseline; gap: 10px;"><span style="font-family: 'EB Garamond', serif; font-size: 15px; color: #2d423b;">03</span><span style="width: 6px; height: 6px; border-radius: 50%; background: #ba7878;"></span><span style="font-family: 'EB Garamond', serif; font-size: 19px; color: #2d423b;" data-i18n="hero-branding">Branding</span></a>
-    </div>
-  </div>
-  <div id="intro-art" style="flex: 1 1 340px; min-height: 420px; position: relative; opacity: 1; overflow: hidden;">
-    <img src="assets/nenufares.png" alt="Nenúfares — obra de Katharina Armbruster" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%;">
   </div>
 </div>
 
@@ -218,9 +317,10 @@
 
 <!-- ===== 01 Galería ===== -->
 <!-- La sala. Al entrar, el scroll vertical se traduce en un recorrido horizontal
-     por las obras; al llegar a la última, la página sigue con la sección Mural.
-     El alto de esta zona lo calcula el script (una pantalla + medio alto de
-     pantalla por obra): si agregás o sacás una obra, se ajusta solo.
+     por las obras.
+     El alto de esta zona lo calcula el script (una pantalla + ALTO_POR_OBRA,
+     en el script, por obra): si agregás o sacás una obra, se ajusta solo.
+     Al llegar a la última obra, la página sigue con Exhibiciones.
      El tamaño de cada obra sale de su medida real, en el atributo data-cm. -->
 <div id="galeria" data-screen-label="Galería">
   <div id="galeria-sticky">
@@ -384,6 +484,113 @@
   </div>
 </div>
 
+<!-- ===== 02 Exhibiciones ===== -->
+<!-- Las muestras, de la más reciente a la más vieja. Cada una es un bloque
+     <article class="muestra">: tres fotos (tríptico), nombre, datos y una ficha
+     que se despliega con "+ info". Para sumar una muestra: copiá un bloque entero
+     y cambiá fotos y textos. Si falta una foto, poné <div class="hueco"></div>.
+     Cuando haya muestras viejas que ya no se destaquen, van en una lista simple
+     debajo de las destacadas (todavía no hay ninguna, por eso no aparece).
+     Los textos en [corchetes] son pendientes a completar con Kati. -->
+<div id="exhibiciones" data-screen-label="Exhibiciones">
+  <div class="expo-caja">
+    <div class="expo-titulo">
+      <span>02</span>
+      <h2 data-i18n="expo-title">Exhibiciones</h2>
+    </div>
+
+    <article class="muestra">
+      <div class="triptico">
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/emac-tela-sala.jpg" alt="Obra textil colgada en la sala de la EMAC: tela traslúcida con una figura bordada en azul sobre una línea de horizonte" data-caption="Muestra Textil de Artes Visuales — EMAC, septiembre 2026"></span>
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/emac-tela-detalle.jpg" alt="Detalle de la tela: un perro dibujado en grafito y una figura azul" data-caption="Muestra Textil de Artes Visuales — EMAC, septiembre 2026"></span>
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/emac-tela-publico.jpg" alt="Visitantes frente a la obra textil, una de ellas tocando la tela" data-caption="Muestra Textil de Artes Visuales — EMAC, septiembre 2026"></span>
+      </div>
+      <div class="muestra-datos">
+        <h3 data-i18n="emac-nombre">Muestra Textil de Artes Visuales</h3>
+        <span class="meta" data-i18n="emac-meta">Colectiva · EMAC · Septiembre 2026</span>
+        <button class="mas-info" type="button" aria-expanded="false"><span class="signo" aria-hidden="true"></span><span data-i18n="expo-mas">info</span></button>
+      </div>
+      <div class="muestra-ficha"><div>
+        <dl>
+          <dt data-i18n="lbl-tipo">Tipo</dt><dd data-i18n="emac-tipo">Muestra colectiva</dd>
+          <dt data-i18n="lbl-fecha">Fecha</dt><dd data-i18n="emac-fecha">Septiembre 2026 <span class="pendiente">[días]</span></dd>
+          <dt data-i18n="lbl-sala">Sala</dt><dd data-i18n="emac-sala">EMAC <span class="pendiente">[nombre completo, ciudad]</span></dd>
+          <dt data-i18n="lbl-obra">Obra expuesta</dt><dd data-i18n="emac-obra"><span class="pendiente">[título]</span> — textil: dibujo y bordado sobre tela</dd>
+        </dl>
+        <p data-i18n="emac-texto"><span class="pendiente">[2–3 líneas sobre la muestra, con Kati]</span></p>
+      </div></div>
+    </article>
+
+    <article class="muestra">
+      <div class="triptico">
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/minima-copa-de-tinto.jpg" alt="Copa de tinto, grabado enmarcado en negro, con su cartel de la muestra Mínima" data-caption="Mínima — Andén 2222, Galería Rimini, agosto 2026"></span>
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/minima-pared.jpg" alt="Pared de la muestra con decenas de obras de pequeño formato" data-caption="Mínima — Andén 2222, Galería Rimini, agosto 2026"></span>
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/minima-inauguracion.jpg" alt="Público en la inauguración de Mínima en Galería Rimini" data-caption="Mínima — Andén 2222, Galería Rimini, agosto 2026"></span>
+      </div>
+      <div class="muestra-datos">
+        <h3>Mínima</h3>
+        <span class="meta" data-i18n="minima-meta">Colectiva · Galería Rimini · Agosto 2026</span>
+        <button class="mas-info" type="button" aria-expanded="false"><span class="signo" aria-hidden="true"></span><span data-i18n="expo-mas">info</span></button>
+      </div>
+      <div class="muestra-ficha"><div>
+        <dl>
+          <dt data-i18n="lbl-tipo">Tipo</dt><dd data-i18n="minima-tipo">Muestra colectiva de obra de pequeño formato</dd>
+          <dt data-i18n="lbl-fecha">Fecha</dt><dd data-i18n="minima-fecha">Agosto 2026 <span class="pendiente">[días]</span></dd>
+          <dt data-i18n="lbl-sala">Sala</dt><dd data-i18n="minima-sala">Galería Rimini <span class="pendiente">[ciudad]</span></dd>
+          <dt data-i18n="lbl-organiza">Organiza</dt><dd>Andén 2222</dd>
+          <dt data-i18n="lbl-obra">Obra expuesta</dt><dd data-i18n="minima-obra"><em>Copa de tinto</em> — grabado</dd>
+        </dl>
+        <p data-i18n="minima-texto"><span class="pendiente">[2–3 líneas sobre la muestra, con Kati]</span></p>
+      </div></div>
+    </article>
+
+    <article class="muestra">
+      <div class="triptico">
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/barbuda-provisoria.jpg" alt="Visitantes en la muestra de Espacio Barbuda" data-caption="Espacio Barbuda — CABA, 2026"></span>
+        <div class="hueco" data-i18n="expo-hueco">Foto pendiente</div>
+        <div class="hueco" data-i18n="expo-hueco">Foto pendiente</div>
+      </div>
+      <div class="muestra-datos">
+        <h3>Espacio Barbuda</h3>
+        <span class="meta" data-i18n="barbuda-meta">Colectiva · CABA · Abril 2026</span>
+        <button class="mas-info" type="button" aria-expanded="false"><span class="signo" aria-hidden="true"></span><span data-i18n="expo-mas">info</span></button>
+      </div>
+      <div class="muestra-ficha"><div>
+        <dl>
+          <dt data-i18n="lbl-tipo">Tipo</dt><dd data-i18n="barbuda-tipo">Muestra colectiva</dd>
+          <dt data-i18n="lbl-fecha">Fecha</dt><dd data-i18n="barbuda-fecha">Abril 2026 <span class="pendiente">[días]</span></dd>
+          <dt data-i18n="lbl-sala">Sala</dt><dd data-i18n="barbuda-sala">Espacio Barbuda, Ciudad Autónoma de Buenos Aires</dd>
+          <dt data-i18n="lbl-obra">Obra expuesta</dt><dd data-i18n="barbuda-obra"><em>Mujeres</em> — textil</dd>
+        </dl>
+        <p data-i18n="barbuda-texto"><span class="pendiente">[2–3 líneas sobre la muestra, con Kati]</span></p>
+      </div></div>
+    </article>
+
+    <article class="muestra">
+      <div class="triptico">
+        <span class="zoom-marco" tabindex="0" role="button" aria-label="Ver foto en grande"><img class="zoom-img" data-lightbox src="assets/expos/macab-provisoria.jpg" alt="Visitantes frente a Azules en la muestra MACAB" data-caption="MACAB — Buenos Aires, 2026"></span>
+        <div class="hueco" data-i18n="expo-hueco">Foto pendiente</div>
+        <div class="hueco" data-i18n="expo-hueco">Foto pendiente</div>
+      </div>
+      <div class="muestra-datos">
+        <h3>MACAB</h3>
+        <span class="meta" data-i18n="macab-meta">Colectiva · Buenos Aires · 2026</span>
+        <button class="mas-info" type="button" aria-expanded="false"><span class="signo" aria-hidden="true"></span><span data-i18n="expo-mas">info</span></button>
+      </div>
+      <div class="muestra-ficha"><div>
+        <dl>
+          <dt data-i18n="lbl-tipo">Tipo</dt><dd data-i18n="macab-tipo">Muestra colectiva</dd>
+          <dt data-i18n="lbl-fecha">Fecha</dt><dd data-i18n="macab-fecha">2026 <span class="pendiente">[mes y días]</span></dd>
+          <dt data-i18n="lbl-sala">Sala</dt><dd data-i18n="macab-sala">MACAB, Buenos Aires <span class="pendiente">[nombre completo]</span></dd>
+          <dt data-i18n="lbl-obra">Obra expuesta</dt><dd data-i18n="macab-obra"><em>Azules</em> — collage de grabados <span class="pendiente">[a confirmar]</span></dd>
+        </dl>
+        <p data-i18n="macab-texto"><span class="pendiente">[2–3 líneas sobre la muestra, con Kati]</span></p>
+      </div></div>
+    </article>
+
+  </div>
+</div>
+
 <!-- ===== Transición: lunares que invaden ===== -->
 <div id="dots-zone" style="height: 170vh; position: relative;">
   <div id="dots-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; background: #1d1a16;">
@@ -400,28 +607,30 @@
 </div>
 
 <!-- ===== 03 Mural ===== -->
+<!-- La foto grande es el mural floral (pedido de Kati, oct. 2026); debajo, la
+     pared completa y el espacio intervenido. -->
 <div id="mural" data-screen-label="Mural" style="position: relative; background: #faf6f3; color: #2d423b; overflow: hidden;">
   <span style="position: absolute; right: -70px; top: 140px; width: 190px; height: 190px; border-radius: 50%; background: #F2B8C6; opacity: 0.55;"></span>
   <span style="position: absolute; left: -60px; top: 46%; width: 150px; height: 150px; border-radius: 50%; background: #8FD0C2; opacity: 0.5;"></span>
   <div style="max-width: 1440px; margin: 0 auto; padding: clamp(50px, 8vh, 90px) clamp(20px, 5vw, 96px); display: flex; flex-direction: column; gap: clamp(36px, 5.5vh, 56px); position: relative;">
     <div style="display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;">
-      <span style="font-family: 'EB Garamond', serif; font-size: 20px; color: #ba7878;">02</span>
+      <span style="font-family: 'EB Garamond', serif; font-size: 20px; color: #ba7878;">03</span>
       <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0;" data-i18n="mural-title">Mural</h2>
       <span style="width: 16px; height: 16px; border-radius: 50%; background: #8FD0C2; align-self: center;"></span>
       <span style="width: 12px; height: 12px; border-radius: 50%; background: #E3B96E; align-self: center;"></span>
       <span style="width: 9px; height: 9px; border-radius: 50%; background: #F2B8C6; align-self: center;"></span>
     </div>
   </div>
-  <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox data-fade src="assets/mural-lunares.png" alt="Pared completa — Malaku Eventos, lunares turquesa y ocre" style="width: 100%; height: clamp(360px, 78vh, 760px); object-fit: cover; object-position: 50% 62%; display: block;"></span>
+  <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox data-fade src="assets/mural-floral-recorte.jpg" alt="Mural floral — pastelería Malaku" style="width: 100%; height: clamp(360px, 78vh, 760px); object-fit: cover; object-position: 50% 38%; display: block;"></span>
   <div style="max-width: 1440px; margin: 0 auto; padding: 20px clamp(20px, 5vw, 96px) clamp(50px, 8vh, 90px); display: flex; flex-direction: column; gap: clamp(36px, 5.5vh, 56px); position: relative;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap;">
-      <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-full"><span style="color: #5c7167;">02 Pared completa</span> — Malaku Eventos</div>
+      <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-adapt"><span style="color: #5c7167;">01 Adaptación a espacio</span> — Pastelería Malaku</div>
       <p style="font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.5; margin: 0; max-width: 52ch;" data-i18n="mural-desc">Murales pintados a mano que dialogan con el espacio y la estética de cada lugar. Diseño, boceto y pintura in situ, de la pared completa al muro con relieve.</p>
     </div>
     <div style="display: flex; gap: 28px; flex-wrap: wrap;">
       <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
-        <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox src="assets/mural-floral.png" alt="Mural floral — pastelería Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block;"></span>
-        <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-adapt"><span style="color: #5c7167;">01 Adaptación a espacio</span> — Pastelería Malaku</div>
+        <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox src="assets/mural-lunares.png" alt="Pared completa — Malaku Eventos, lunares turquesa y ocre" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; object-position: 50% 62%; display: block;"></span>
+        <div style="font-family: 'EB Garamond', serif; font-size: 17px;" data-i18n="mural-cap-full"><span style="color: #5c7167;">02 Pared completa</span> — Malaku Eventos</div>
       </div>
       <div data-fade style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px;">
         <span class="zoom-marco" tabindex="0" role="button" style="display: block;"><img class="zoom-img" data-lightbox src="assets/mural-juegos.png" alt="Espacio intervenido — juegos infantiles exteriores Malaku" style="width: 100%; height: clamp(280px, 32vw, 440px); object-fit: cover; display: block;"></span>
@@ -447,163 +656,6 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- ===== Transición: los lunares se ordenan ===== -->
-<div id="order-zone" style="height: 200vh; position: relative;">
-  <div id="order-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; background: #faf6f3;">
-    <div id="order-wash" style="position: absolute; inset: 0; background: #1a201c; opacity: 0; z-index: 1;"></div>
-    <span class="odot" data-sx="12" data-sy="70" data-ex="30" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 22px; height: 22px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="24" data-sy="26" data-ex="40" data-ey="46" data-c0="242,184,198" data-c1="198,170,150" style="position: absolute; width: 16px; height: 16px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="38" data-sy="60" data-ex="50" data-ey="46" data-c0="227,185,110" data-c1="198,170,150" style="position: absolute; width: 30px; height: 30px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="52" data-sy="22" data-ex="60" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 18px; height: 18px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="66" data-sy="66" data-ex="70" data-ey="46" data-c0="242,184,198" data-c1="198,170,150" style="position: absolute; width: 26px; height: 26px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="80" data-sy="30" data-ex="80" data-ey="46" data-c0="227,185,110" data-c1="198,170,150" style="position: absolute; width: 15px; height: 15px; border-radius: 50%; z-index: 2;"></span>
-    <span class="odot" data-sx="18" data-sy="40" data-ex="20" data-ey="46" data-c0="143,208,194" data-c1="198,170,150" style="position: absolute; width: 12px; height: 12px; border-radius: 50%; z-index: 2;"></span>
-  </div>
-</div>
-
-<!-- ===== 03 Branding ===== -->
-<div id="branding" data-screen-label="Branding" style="position: relative; background: #1a201c; color: #e9e2da; overflow: hidden;">
-  <div style="max-width: 1440px; margin: 0 auto; padding: clamp(70px, 10vh, 110px) clamp(20px, 5vw, 96px) clamp(48px, 7vh, 72px); display: flex; flex-direction: column; gap: 28px;">
-    <div style="display: flex; align-items: baseline; gap: 20px; border-bottom: 1px solid rgba(198,170,150,0.35); padding-bottom: 26px; flex-wrap: wrap;">
-      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 17px; color: #c6aa96;">03</span>
-      <h2 style="font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(34px, 3.5vw, 46px); margin: 0; color: #f2ece4;" data-i18n="branding-title">Branding</h2>
-      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #c6aa96; margin-left: auto;" data-i18n="branding-tag">Diseño de marca — casos</span>
-    </div>
-    <p style="font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(19px, 2vw, 24px); line-height: 1.5; margin: 0; max-width: 56ch; color: #e9e2da;" data-i18n="branding-intro">Identidades visuales construidas junto a cada marca: del concepto al sistema — wordmark, papelería, dirección de arte y aplicaciones. <span style="font-style: normal; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8f8a80;">[placeholder — texto final con Kati]</span></p>
-  </div>
-
-  <!-- Ventana Norda -->
-  <div data-window="norda" data-fade style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px);">
-    <div id="window-norda" style="border-top: 4px solid #ffffff; box-shadow: 0 40px 90px rgba(0,0,0,0.5); position: relative; z-index: 2;">
-      <div style="background: #f4efe9; color: #191919; display: flex; flex-direction: column;">
-        <div style="background: #12100e; padding: 14px 22px; display: flex; align-items: center; gap: 12px;">
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.9;"></span>
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.55;"></span>
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #ffffff; opacity: 0.3;"></span>
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #ffffff; margin: 0 auto;" data-i18n="norda-window">ventana — norda.</span>
-        </div>
-        <div style="padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 52px) clamp(28px, 4vw, 44px);display: flex; flex-direction: column; gap: 32px;">
-          <div style="display: flex; gap: 44px; align-items: flex-start; flex-wrap: wrap;">
-            <img src="assets/norda/wordmark.png" alt="norda. — wordmark" style="width: 160px; flex: none; display: block; mix-blend-mode: multiply; margin-top: 4px;">
-            <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 14px;">
-              <div style="display: flex; gap: 32px; flex-wrap: wrap;">
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;" data-i18n="lbl-proyecto">Proyecto</span>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px;" data-i18n="norda-proyecto-val">Norda — indumentaria</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px;">
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;" data-i18n="lbl-alcance">Alcance</span>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.55;" data-i18n="norda-alcance-val">Identidad visual, papelería, dirección de arte, aplicaciones (web, vía pública, etiqueta, packaging, redes)</span>
-                </div>
-              </div>
-              <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.5; margin: 0; max-width: 60ch;" data-i18n="norda-desc">Reducir la marca a su gesto mínimo — una grotesca decidida y el blanco y negro — para que la ropa y la fotografía pongan el resto. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span></p>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; grid-row: span 2; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/norda/moda.png" alt="Norda — dirección de arte" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; display: block;">
-              <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;" data-i18n="norda-lbl-arte">Dirección de arte</span>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/norda/web.png" alt="Norda — e-commerce" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-web">Web</span>
-            </div>
-            <div style="position: relative; background: #12100e; display: flex; align-items: center; justify-content: center;">
-              <div style="width: 56px; height: 56px; position: relative;">
-                <span style="position: absolute; top: 0; left: 11px; width: 34px; height: 17px; border-radius: 9999px; background: #f4efe9;"></span>
-                <span style="position: absolute; top: 16px; left: 0; width: 27px; height: 27px; background: #f4efe9; clip-path: polygon(0 0, 100% 100%, 0 100%);"></span>
-              </div>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/norda/viapublica.png" alt="Norda — vía pública" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-via">Vía pública</span>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/norda/movil.png" alt="Norda — redes" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="norda-lbl-redes">Redes</span>
-            </div>
-          </div>
-          <div style="display: flex; justify-content: flex-end;">
-            <a href="#branding" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: #6e5c49; text-decoration: none; border-bottom: 1px solid #6e5c49; padding-bottom: 2px;" data-i18n="norda-vermas">ver más de norda. →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Divisor -->
-  <div style="max-width: 1100px; margin: 0 auto; padding: 34px clamp(20px, 5vw, 48px); display: flex; align-items: center; gap: 14px; position: relative; z-index: 1;">
-    <span style="width: 22px; height: 1px; background: #c6aa96; opacity: 0.5;"></span>
-    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8f8a80;" data-i18n="mas-marcas">Más marcas →</span>
-  </div>
-
-  <!-- Ventana Vera -->
-  <div data-window="vera" data-fade style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px);">
-    <div id="window-vera" style="border-top: 4px solid; border-image: linear-gradient(90deg, #0E1A14, #33412E, #A4B465, #DCCCB3, #F7F4ED) 1; box-shadow: 0 40px 90px rgba(20,32,20,0.5); position: relative; z-index: 3;">
-      <div style="background: #f4efe9; color: #191919; display: flex; flex-direction: column;">
-        <div style="background: #12100e; padding: 14px 22px; display: flex; align-items: center; gap: 12px;">
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #33412E;"></span>
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #A4B465;"></span>
-          <span class="chrome-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #DCCCB3;"></span>
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #DCCCB3; margin: 0 auto;" data-i18n="vera-window">ventana — vera botanicals.</span>
-        </div>
-        <div style="padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 52px) clamp(28px, 4vw, 44px); display: flex; flex-direction: column; gap: 32px;">
-          <div style="display: flex; gap: 44px; align-items: flex-start; flex-wrap: wrap;">
-            <img src="assets/vera/logo.png" alt="vēra botanicals — wordmark" style="width: 160px; flex: none; display: block; mix-blend-mode: multiply; margin-top: 8px;">
-            <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 14px;">
-              <div style="display: flex; gap: 32px; flex-wrap: wrap;">
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;" data-i18n="lbl-proyecto">Proyecto</span>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px;" data-i18n="vera-proyecto-val">Vera Botanicals — cosmética natural</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px;">
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e5c49;" data-i18n="lbl-alcance">Alcance</span>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.55;" data-i18n="vera-alcance-val">Identidad visual (wordmark + submarca), paleta y patrones, packaging, dirección de foto, aplicaciones (redes, etiqueta)</span>
-                </div>
-              </div>
-              <p style="font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.5; margin: 0; max-width: 60ch;" data-i18n="vera-desc">Una identidad orgánica y serena, apoyada en verdes profundos y texturas naturales, que traduce la formulación consciente de la marca en cada superficie. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span></p>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 140px; gap: 10px;">
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; grid-row: span 2; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/vera/overview.png" alt="Vera Botanicals — producto" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block;">
-              <span style="position: absolute; left: 10px; bottom: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 4px 8px;" data-i18n="vera-lbl-producto">Producto</span>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/vera/bottle.png" alt="Vera Botanicals — hero" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-hero">Hero</span>
-            </div>
-            <div style="position: relative; display: grid; grid-template-columns: repeat(5, 1fr);">
-              <span style="background: #0E1A14;"></span>
-              <span style="background: #33412E;"></span>
-              <span style="background: #A4B465;"></span>
-              <span style="background: #DCCCB3;"></span>
-              <span style="background: #F7F4ED; border-left: 1px solid rgba(0,0,0,0.08);"></span>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/vera/patterns.png" alt="Vera Botanicals — patrones" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-patrones">Patrones</span>
-            </div>
-            <div class="zoom-marco" tabindex="0" role="button" style="position: relative; overflow: hidden;">
-              <img class="zoom-img" data-lightbox src="assets/vera/packaging.png" alt="Vera Botanicals — packaging" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
-              <span style="position: absolute; left: 8px; bottom: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #f4efe9; background: rgba(20,20,18,0.65); padding: 3px 7px;" data-i18n="vera-lbl-packaging">Packaging</span>
-            </div>
-          </div>
-          <div style="display: flex; justify-content: flex-end;">
-            <a href="#branding" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: #6e5c49; text-decoration: none; border-bottom: 1px solid #6e5c49; padding-bottom: 2px;" data-i18n="vera-vermas">ver más de vera botanicals. →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA de la arista -->
-  <div style="max-width: 1100px; margin: 0 auto; padding: clamp(40px, 6vh, 64px) clamp(20px, 5vw, 48px) clamp(70px, 9vh, 100px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap; position: relative; z-index: 1;">
-    <p style="font-family: 'EB Garamond', serif; font-size: 19px; margin: 0; color: #bdb4a8;" data-i18n="branding-cta-text">¿Tu marca necesita una identidad?</p>
-    <a href="#contacto" style="display: inline-flex; align-items: center; gap: 10px; border: 1px solid #c6aa96; color: #c6aa96; text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.08em; padding: 11px 22px; margin-left: auto;" data-i18n="branding-cta-btn">CONTACTO Y ENCARGOS →</a>
   </div>
 </div>
 
@@ -637,7 +689,7 @@
 
 <!-- ===== Lightbox: obras ===== -->
 <div id="lightbox" style="position: fixed; inset: 0; z-index: 100; background: rgba(20,24,21,0.94); display: none; align-items: center; justify-content: center; padding: clamp(24px, 6vh, 64px) clamp(20px, 6vw, 80px); cursor: zoom-out;">
-  <img id="lightbox-img" src="" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 90px rgba(0,0,0,0.55); display: block;">
+  <img id="lightbox-img" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 30px 90px rgba(0,0,0,0.55); display: block;">
   <div id="lightbox-cap"></div>
   <span id="lightbox-close" style="position: absolute; top: clamp(16px, 3vh, 32px); right: clamp(16px, 3vw, 40px); font-family: 'EB Garamond', serif; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: #e9e2da; border: 1px solid rgba(233,226,218,0.5); padding: 8px 16px; cursor: pointer;" data-i18n="lightbox-close">Cerrar ✕</span>
 </div>
@@ -717,65 +769,14 @@ class Component extends DCLogic {
     }, { threshold: 0.12 });
     fades.forEach((el) => this._io.observe(el));
 
-    // ---- Transición mural→branding: los lunares se ordenan ----
-    const orderZone = document.getElementById('order-zone');
-    const orderWash = document.getElementById('order-wash');
-    const odots = orderZone ? Array.from(orderZone.querySelectorAll('.odot')) : [];
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const lerpColor = (c0, c1, t) => {
-      const a = c0.split(',').map(Number), b = c1.split(',').map(Number);
-      return 'rgb(' + a.map((v, i) => Math.round(lerp(v, b[i], t))).join(',') + ')';
-    };
-    const updateOrder = () => {
-      if (!orderZone) return;
-      const zr = orderZone.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const total = orderZone.offsetHeight - vh;
-      const p = clamp01(-zr.top / total);
-      const eased = p * p * (3 - 2 * p);
-      odots.forEach((d) => {
-        const sx = parseFloat(d.dataset.sx), sy = parseFloat(d.dataset.sy);
-        const ex = parseFloat(d.dataset.ex), ey = parseFloat(d.dataset.ey);
-        d.style.left = lerp(sx, ex, eased) + '%';
-        d.style.top = lerp(sy, ey, eased) + '%';
-        d.style.backgroundColor = lerpColor(d.dataset.c0, d.dataset.c1, eased);
+    // ---- 02 Exhibiciones: "+ info" despliega la ficha de cada muestra ----
+    document.querySelectorAll('.muestra').forEach((m) => {
+      const boton = m.querySelector('.mas-info');
+      if (!boton) return;
+      boton.addEventListener('click', () => {
+        const abierta = m.classList.toggle('abierta');
+        boton.setAttribute('aria-expanded', String(abierta));
       });
-      if (orderWash) orderWash.style.opacity = String(p > 0.75 ? (p - 0.75) / 0.25 : 0);
-    };
-
-    // ---- Ventanas Branding: encendido + traspaso con profundidad ----
-    const winNorda = document.getElementById('window-norda');
-    const winVera = document.getElementById('window-vera');
-    const updateWindows = () => {
-      if (!winVera) return;
-      const vr = winVera.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const p = clamp01((vh - vr.top) / (vh * 0.85));
-      winVera.style.transform = 'translateY(' + (-(p * 26)).toFixed(1) + 'px) scale(' + (0.95 + 0.05 * p).toFixed(3) + ')';
-      winVera.style.opacity = String(0.55 + 0.45 * p);
-      if (winNorda) {
-        winNorda.style.transform = 'scale(' + (1 - 0.05 * p).toFixed(3) + ')';
-        winNorda.style.filter = p > 0.02 ? 'blur(' + (p * 3.5).toFixed(1) + 'px)' : 'none';
-        winNorda.style.opacity = String(1 - 0.4 * p);
-      }
-    };
-    [winNorda, winVera].forEach((w) => { if (w) w.style.transition = 'transform 0.05s linear, filter 0.05s linear'; });
-
-    document.querySelectorAll('[data-window]').forEach((win) => {
-      const dots = Array.from(win.querySelectorAll('.chrome-dot'));
-      const originals = dots.map((d) => ({ opacity: d.style.opacity || '1' }));
-      dots.forEach((d) => { d.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; d.style.opacity = '0'; d.style.transform = 'scale(0.3)'; });
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            dots.forEach((d, i) => {
-              setTimeout(() => { d.style.opacity = originals[i].opacity; d.style.transform = 'scale(1)'; }, i * 160);
-            });
-            io.unobserve(win);
-          }
-        });
-      }, { threshold: 0.25 });
-      io.observe(win);
     });
 
     // ================= 01 Galería — el recorrido por la sala =================
@@ -783,7 +784,7 @@ class Component extends DCLogic {
     // horizontal del riel. Qué es seguro cambiar acá: ALTO_POR_OBRA (cuánto
     // dura el paseo por cada obra) y ESCALA_REAL (cuánto se respeta la
     // diferencia de tamaño real entre obras: 1 = fiel, 0 = todas iguales).
-    const ALTO_POR_OBRA = 50;    // en vh, por obra
+    const ALTO_POR_OBRA = 30;    // en vh, por obra (era 50; se acortó en oct. 2026 para que el paseo no se haga largo)
     const ESCALA_REAL   = 0.20;
     const ALTO_MAX = 56, ALTO_MIN = 9;   // alto de la obra en pantalla, en vh
     const FIN_DEL_PASEO = 0.85;  // el 15% final la última obra se queda quieta y centrada
@@ -848,7 +849,11 @@ class Component extends DCLogic {
       // justo cuando la sección ya se está yendo, y nunca se la ve.
       const pRiel = clamp01(p / FIN_DEL_PASEO);
       gRiel.style.transform = 'translateX(' + (gx0 + (gx1 - gx0) * pRiel) + 'px)';
-      if (gAvance) gAvance.style.width = (p * 100) + '%';
+      if (gAvance) {
+        gAvance.style.width = (p * 100) + '%';
+        // al terminar la sala se apaga, para no quedar como una línea suelta sobre Exhibiciones
+        gAvance.style.opacity = String(1 - clamp01((p - 0.94) / 0.06));
+      }
 
       // las luces suben al entrar; no arrancan en cero, si no quien cae en p=0 no ve nada
       const entrada = 0.35 + 0.65 * clamp01(p / 0.10);
@@ -890,12 +895,10 @@ class Component extends DCLogic {
 
     const prevOnScroll = this._onScroll;
     this._onScroll = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateApagon(); updateGaleria(); updateOrder(); updateWindows(); ticking = false; }); }
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateApagon(); updateGaleria(); ticking = false; }); }
     };
     window.removeEventListener('scroll', prevOnScroll);
     window.addEventListener('scroll', this._onScroll, { passive: true });
-    updateOrder();
-    updateWindows();
 
     const stmt = document.getElementById('statement-lines');
     const lines = stmt ? Array.from(stmt.children) : [];
@@ -962,20 +965,19 @@ class Component extends DCLogic {
     // (En el sitio final en Astro esto vivirá en el contenido bilingüe + src/i18n; esto es el prototipo.)
     const I18N_EN = {
       // Navegación
+      'nav-inicio': `Home`,
+      'nav-bio': `Bio`,
       'nav-galeria': `<span style="font-size: 13px; color: #5c7167;">01</span> Gallery`,
-      'nav-mural': `<span style="font-size: 13px; color: #5c7167;">02</span> Murals`,
-      'nav-branding': `<span style="font-size: 13px; color: #5c7167;">03</span> Branding`,
+      'nav-exhibiciones': `<span style="font-size: 13px; color: #5c7167;">02</span> Exhibitions`,
+      'nav-mural': `<span style="font-size: 13px; color: #5c7167;">03</span> Murals`,
       'nav-contacto': `Contact <span style="color: #ba7878;">→</span>`,
-      // Intro
-      'intro-eyebrow': `Portfolio — Visual artist`,
+      // Inicio y Bio
+      'inicio-linea': `Visual artist — Buenos Aires`,
       'intro-badge': `National University of the Arts — BA in Visual Arts`,
-      'intro-bio': `Visual artist from the south of Buenos Aires. Completing a BA in Visual Arts with a focus on painting (UNA), with training in drawing, painting, ceramics, sculpture, printmaking and printed art. She exhibited her textile work <em>Mujeres</em> at Espacio Barbuda (Buenos Aires, 2026) and took part in the Clínica de Obra led by Marina De Caro. She currently works freelance on murals, illustration and custom commissions.`,
-      'intro-quote': `“Surfaces of layering and veiling where the image appears in an unstable state, between presence and absence.”`,
+      'bio-1': `Student in the BA in Visual Arts with a focus on Painting (National University of the Arts, Argentina). Her practice spans drawing, painting, printmaking, textile, digital media and visual research, with a focus on conceptual development and art history.`,
+      'bio-2': `In 2026 she took part in the group shows <em>Mínima</em> —organized by Andén 2222 at Galería Rimini—, the EMAC Visual Arts Textile Show, MACAB and Espacio Barbuda. She took part in the Clínica de Obra led by Marina De Caro and in international academic exchanges. She lives and works in the south of Buenos Aires, where she makes murals, illustration and commissioned work.`,
       'intro-cta': `Contact & commissions <span style="color: #ba7878;">→</span>`,
       'intro-cv': `Download CV (PDF)`,
-      'hero-galeria': `Gallery`,
-      'hero-mural': `Murals`,
-      'hero-branding': `Branding`,
       // 01 Galería — la sala
       // Los títulos de obra no se traducen (son nombres propios), igual que se
       // decidió con «Mujeres». La excepción es «Sin título»: no es un nombre
@@ -1004,7 +1006,42 @@ class Component extends DCLogic {
       'g-sintitulo-datos': `Colored graphite · 22×32 cm · 2022`,
       'g-estudio-titulo': `Estudio`,
       'g-estudio-datos': `Charcoal · 100×70 cm · 2022`,
-      // 02 Mural
+      // 02 Exhibiciones
+      // Los nombres de muestras y salas no se traducen (son nombres propios).
+      'expo-title': `Exhibitions`,
+      'expo-mas': `info`,
+      'expo-hueco': `Photo to come`,
+      'lbl-tipo': `Type`,
+      'lbl-fecha': `Date`,
+      'lbl-sala': `Venue`,
+      'lbl-organiza': `Organized by`,
+      'lbl-obra': `Work shown`,
+      'emac-nombre': `Visual Arts Textile Show`,
+      'emac-meta': `Group show · EMAC · September 2026`,
+      'emac-tipo': `Group show`,
+      'emac-fecha': `September 2026 <span class="pendiente">[days]</span>`,
+      'emac-sala': `EMAC <span class="pendiente">[full name, city]</span>`,
+      'emac-obra': `<span class="pendiente">[title]</span> — textile: drawing and embroidery on fabric`,
+      'emac-texto': `<span class="pendiente">[2–3 lines about the show, with Kati]</span>`,
+      'minima-meta': `Group show · Galería Rimini · August 2026`,
+      'minima-tipo': `Group show of small-format work`,
+      'minima-fecha': `August 2026 <span class="pendiente">[days]</span>`,
+      'minima-sala': `Galería Rimini <span class="pendiente">[city]</span>`,
+      'minima-obra': `<em>Copa de tinto</em> — print`,
+      'minima-texto': `<span class="pendiente">[2–3 lines about the show, with Kati]</span>`,
+      'barbuda-meta': `Group show · Buenos Aires · April 2026`,
+      'barbuda-tipo': `Group show`,
+      'barbuda-fecha': `April 2026 <span class="pendiente">[days]</span>`,
+      'barbuda-sala': `Espacio Barbuda, Buenos Aires`,
+      'barbuda-obra': `<em>Mujeres</em> — textile`,
+      'barbuda-texto': `<span class="pendiente">[2–3 lines about the show, with Kati]</span>`,
+      'macab-meta': `Group show · Buenos Aires · 2026`,
+      'macab-tipo': `Group show`,
+      'macab-fecha': `2026 <span class="pendiente">[month and days]</span>`,
+      'macab-sala': `MACAB, Buenos Aires <span class="pendiente">[full name]</span>`,
+      'macab-obra': `<em>Azules</em> — print collage <span class="pendiente">[to confirm]</span>`,
+      'macab-texto': `<span class="pendiente">[2–3 lines about the show, with Kati]</span>`,
+      // 03 Mural
       'mural-title': `Murals`,
       'mural-cap-full': `<span style="color: #5c7167;">02 Full wall</span> — Malaku Eventos`,
       'mural-desc': `Hand-painted murals that dialogue with the space and aesthetic of each place. Design, sketch and on-site painting, from a full wall to walls with relief.`,
@@ -1019,33 +1056,6 @@ class Component extends DCLogic {
       'mural-paso-2': `We agree on next steps.`,
       'mural-paso-3': `Digital sketches, with two rounds of changes.`,
       'mural-paso-4': `Time to paint!`,
-      // 03 Branding
-      'branding-title': `Branding`,
-      'branding-tag': `Brand design — case studies`,
-      'branding-intro': `Visual identities built together with each brand: from concept to system — wordmark, stationery, art direction and applications. <span style="font-style: normal; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8f8a80;">[placeholder — final copy with Kati]</span>`,
-      'norda-window': `window — norda.`,
-      'lbl-proyecto': `Project`,
-      'lbl-alcance': `Scope`,
-      'norda-proyecto-val': `Norda — apparel`,
-      'norda-alcance-val': `Visual identity, stationery, art direction, applications (web, out-of-home, label, packaging, social)`,
-      'norda-desc': `Reducing the brand to its minimal gesture — a bold grotesque and black and white — so the clothing and photography do the rest. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span>`,
-      'norda-lbl-arte': `Art direction`,
-      'norda-lbl-web': `Web`,
-      'norda-lbl-via': `Out-of-home`,
-      'norda-lbl-redes': `Social`,
-      'norda-vermas': `see more of norda. →`,
-      'mas-marcas': `More brands →`,
-      'vera-window': `window — vera botanicals.`,
-      'vera-proyecto-val': `Vera Botanicals — natural cosmetics`,
-      'vera-alcance-val': `Visual identity (wordmark + sub-brand), palette and patterns, packaging, photo direction, applications (social, label)`,
-      'vera-desc': `An organic, serene identity grounded in deep greens and natural textures, translating the brand's conscious formulation onto every surface. <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6e5c49;">[placeholder]</span>`,
-      'vera-lbl-producto': `Product`,
-      'vera-lbl-hero': `Hero`,
-      'vera-lbl-patrones': `Patterns`,
-      'vera-lbl-packaging': `Packaging`,
-      'vera-vermas': `see more of vera botanicals. →`,
-      'branding-cta-text': `Does your brand need an identity?`,
-      'branding-cta-btn': `CONTACT & COMMISSIONS →`,
       // Contacto
       'contacto-eyebrow': `Contact & commissions`,
       'contacto-title': `Work available; murals and illustration on commission.`,
