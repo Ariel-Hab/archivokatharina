@@ -75,19 +75,19 @@
     --penumbra-sala: 0.50;   /* cuánto brillo pierde una obra al alejarse del centro */
   }
 
-  /* ---- Transición: se apagan las luces ---- */
-  /* El sticky no tiene fondo propio: deja ver el crema de la página y encima
-     sube una capa oscura. Por eso el apagado se lee como que la luz baja,
-     y no como un bloque nuevo que aparece. */
-  #apagon-zone { height: 160vh; position: relative; }
-  #apagon-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-  #apagon-wash { position: absolute; inset: 0; background: var(--pared-sala); opacity: 0; }
-  /* La misma viñeta que la sala, para que al terminar el apagón los dos oscuros
-     sean idénticos y el traspaso no deje una banda visible. Va adentro del wash
-     para que aparezca junto con él y no ensucie el crema del principio. */
-  #apagon-wash::after {
+  /* ---- Transición: se apagan las luces ----
+     Una franja corta que va del crema de la página al oscuro de la sala.
+     Era una zona de 160vh con el apagado atado al scroll; se acortó al 20%
+     (oct. 2026) porque obligaba a scrollear mucho antes de llegar a la obra.
+     Para darle más o menos aire: cambiá el alto. */
+  #apagon-zone { position: relative; height: 32vh; background: linear-gradient(to bottom, #ede3de 0%, #4a4238 55%, var(--pared-sala) 100%); }
+  /* Abajo de la franja aparece de a poco la misma penumbra de los costados que
+     tiene la sala, para que el empalme con la pared no deje una línea. */
+  #apagon-zone::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.5) 100%);
+    background: linear-gradient(to right, rgba(0,0,0,0.43) 0%, rgba(0,0,0,0.27) 25%, rgba(0,0,0,0.13) 50%, rgba(0,0,0,0.27) 75%, rgba(0,0,0,0.43) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 35%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 35%, #000 100%);
   }
 
   #galeria { position: relative; }
@@ -173,10 +173,15 @@
   :root { --velo-inicio: 0.42; }
   #inicio { position: relative; height: calc(100vh - 60px); min-height: 460px; overflow: hidden; color: #f7f2ea; }
   #intro-art { position: absolute; inset: 0; }
-  #intro-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; display: block; }
+  #intro-art img { width: 100%; height: 100%; object-fit: cover; object-position: 35% 28%; display: block; }
   /* el velo: más denso abajo a la izquierda, donde va el nombre */
   #inicio .velo { position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(100deg, rgba(20,28,24,var(--velo-inicio)) 0%, rgba(20,28,24,calc(var(--velo-inicio) * 0.45)) 45%, rgba(20,28,24,0) 75%); }
+  /* en celular el nombre va abajo de todo, sobre los nenúfares rojos: el velo sube desde abajo */
+  @media (max-width: 700px) {
+    #intro-art img { object-position: 0% 28%; }
+    #inicio .velo { background: linear-gradient(to top, rgba(20,28,24,calc(var(--velo-inicio) * 1.5)) 0%, rgba(20,28,24,var(--velo-inicio)) 28%, rgba(20,28,24,0) 55%); }
+  }
   #intro-text { position: absolute; left: clamp(20px, 6vw, 96px); bottom: clamp(48px, 14vh, 140px); right: 20px; }
   #intro-text h1 { font-family: 'EB Garamond', serif; font-weight: 500; font-size: clamp(48px, 7.4vw, 112px); line-height: 0.98; margin: 0; letter-spacing: -0.01em; text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
   #intro-text .linea { margin-top: 18px; font-family: 'EB Garamond', serif; font-size: clamp(14px, 1.2vw, 16px); letter-spacing: 0.22em; text-transform: uppercase; color: rgba(247,242,234,0.86); }
@@ -265,11 +270,14 @@
 
 <!-- ===== Inicio ===== -->
 <!-- La pintura de los nenúfares de fondo, con el nombre encima. Para cambiar la
-     pintura: cambiá el src de la imagen. Para que el nombre se lea mejor o peor:
+     pintura: cambiá el src de la imagen.
+     La imagen actual (nenufares-alta.jpg) es un escalado ×4 hecho con Upscayl
+     sobre nenufares.png, que solo medía 900 px: provisoria hasta tener una foto
+     de la obra en buena calidad. Para que el nombre se lea mejor o peor:
      --velo-inicio, en los estilos de arriba. -->
 <div id="inicio" data-screen-label="Inicio">
   <div id="intro-art">
-    <img src="assets/nenufares-raw.png" alt="Nenúfares — pintura de Katharina Armbruster">
+    <img src="assets/nenufares-alta.jpg" alt="Nenúfares — pintura de Katharina Armbruster">
   </div>
   <div class="velo"></div>
   <div id="intro-text">
@@ -306,14 +314,9 @@
 <!-- ===== Transición: se apagan las luces ===== -->
 <!-- Da aire entre lo anterior y la sala, y pone al visitante en ambiente: el
      fondo se va apagando desde el crema de la página hasta el oscuro de la
-     sala. Es una zona independiente a propósito — cuando se sume otra sección
-     entre la intro y la galería, esta transición sigue funcionando igual.
-     Para darle más o menos aire: cambiá el alto de #apagon-zone. -->
-<div id="apagon-zone">
-  <div id="apagon-sticky">
-    <div id="apagon-wash"></div>
-  </div>
-</div>
+     sala. Para darle más o menos aire: cambiá el alto de #apagon-zone
+     en los estilos de arriba. -->
+<div id="apagon-zone"></div>
 
 <!-- ===== 01 Galería ===== -->
 <!-- La sala. Al entrar, el scroll vertical se traduce en un recorrido horizontal
@@ -808,19 +811,6 @@ class Component extends DCLogic {
       el.style.setProperty('--alto', Math.max(ALTO_MIN, alto).toFixed(1));
     });
 
-    // ---- Transición: se apagan las luces ----
-    // El fondo se apaga en el primer 72% de la zona; el 28% final queda a
-    // oscuras, de modo que se entra a la sala con los ojos ya hechos.
-    const apagonZone  = document.getElementById('apagon-zone');
-    const apagonWash  = document.getElementById('apagon-wash');
-    const updateApagon = () => {
-      if (!apagonZone) return;
-      const vh = window.innerHeight;
-      const r = apagonZone.getBoundingClientRect();
-      const p = clamp01(-r.top / Math.max(1, apagonZone.offsetHeight - vh));
-      if (apagonWash) apagonWash.style.opacity = String(clamp01(p / 0.72));
-    };
-
     const salaVertical = () => window.matchMedia('(max-width: 900px), (prefers-reduced-motion: reduce)').matches;
     const centroEnRiel = (el) => el.offsetLeft + el.offsetWidth / 2;
     let gx0 = 0, gx1 = 0, gVertical = false;
@@ -889,13 +879,13 @@ class Component extends DCLogic {
       });
     });
 
-    window.addEventListener('resize', () => { medirGaleria(); updateGaleria(); updateApagon(); });
-    window.addEventListener('load', () => { medirGaleria(); updateGaleria(); updateApagon(); });
-    medirGaleria(); updateGaleria(); updateApagon();
+    window.addEventListener('resize', () => { medirGaleria(); updateGaleria(); });
+    window.addEventListener('load', () => { medirGaleria(); updateGaleria(); });
+    medirGaleria(); updateGaleria();
 
     const prevOnScroll = this._onScroll;
     this._onScroll = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateApagon(); updateGaleria(); ticking = false; }); }
+      if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); updateGaleria(); ticking = false; }); }
     };
     window.removeEventListener('scroll', prevOnScroll);
     window.addEventListener('scroll', this._onScroll, { passive: true });
