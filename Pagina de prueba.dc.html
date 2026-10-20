@@ -79,15 +79,16 @@
      Una franja corta que va del crema de la página al oscuro de la sala.
      Era una zona de 160vh con el apagado atado al scroll; se acortó al 20%
      (oct. 2026) porque obligaba a scrollear mucho antes de llegar a la obra.
-     Para darle más o menos aire: cambiá el alto. */
-  #apagon-zone { position: relative; height: 32vh; background: linear-gradient(to bottom, #ede3de 0%, #4a4238 55%, var(--pared-sala) 100%); }
+     Las paradas del degradé siguen una curva suave (ease in-out) para que no se
+     vea un salto; para más o menos aire: cambiá el alto. */
+  #apagon-zone { position: relative; height: 56vh; background: linear-gradient(to bottom, rgb(237,227,222) 0%, rgb(235,225,220) 10%, rgb(225,215,210) 20%, rgb(203,194,189) 30%, rgb(171,163,159) 40%, rgb(133,126,122) 50%, rgb(95,90,85) 60%, rgb(63,59,55) 70%, rgb(41,38,34) 80%, rgb(31,28,24) 90%, rgb(29,26,22) 100%); }
   /* Abajo de la franja aparece de a poco la misma penumbra de los costados que
      tiene la sala, para que el empalme con la pared no deje una línea. */
   #apagon-zone::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(to right, rgba(0,0,0,0.43) 0%, rgba(0,0,0,0.27) 25%, rgba(0,0,0,0.13) 50%, rgba(0,0,0,0.27) 75%, rgba(0,0,0,0.43) 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 35%, #000 100%);
-            mask-image: linear-gradient(to bottom, transparent 35%, #000 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 20%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 20%, #000 100%);
   }
 
   #galeria { position: relative; }
